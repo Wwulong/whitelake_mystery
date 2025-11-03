@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>白马湖上的阴谋 - 序章</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="game-container">
+      <div id="scene-background" class="scene-placeholder">场景图加载中...</div>
+      <div id="scene-content">
+        <div id="scene-title">
+          <h2>栗枫市警局</h2>
+        </div>
+        <div id="main-text">
+          今天你一如往常的来到警局上班，栗枫市的冬天简直冷到骨子里，不知道今天又是怎样的一天呢？
+        </div>
+        <div id="interaction-area">
+          <button id="push-door" class="interaction-btn">推门进入警局</button>
+          <div id="dynamic-options"></div>
+        </div>
+      </div>
+
+      <!-- 右侧功能标签 -->
+      <div id="right-sidebar">
+        <!-- 线索标签 -->
+        <div class="sidebar-tab" id="clues-tab">
+          <div class="tab-icon">🔍</div>
+          <div class="tab-content">
+            <div class="tab-header">
+              <h3>线索收集</h3>
+              <span class="close-tab">×</span>
+            </div>
+            <div id="clues-list">
+              <!-- 动态生成的线索列表 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 角色档案标签 -->
+        <div class="sidebar-tab" id="characters-tab">
+          <div class="tab-icon">👥</div>
+          <div class="tab-content">
+            <div class="tab-header">
+              <h3>角色档案</h3>
+              <span class="close-tab">×</span>
+            </div>
+            <div id="characters-grid">
+              <!-- 角色头像网格 -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 角色详情弹窗 -->
+      <div id="character-modal" class="modal">
+        <div class="modal-content">
+          <span class="close-modal">&times;</span>
+          <div id="character-details">
+            <!-- 动态生成的角色详情 -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部对话框 -->
+    <div id="vn-dialog" class="vn-dialog-hidden">
+      <div id="speaker-name"></div>
+      <div id="dialog-content">
+        <p id="dialog-text"></p>
+      </div>
+      <div id="continue-indicator">▼ 点击继续</div>
+      <div id="speaker-portrait">
+        <div id="portrait-placeholder" class="portrait-placeholder">
+          角色头像
+        </div>
+        <img id="portrait-img" src="" alt="角色头像" style="display: none" />
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
