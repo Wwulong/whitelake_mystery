@@ -4,9 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>白马湖上的阴谋 - 序章</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <!-- 主页/标题界面 -->
+    <div id="home-page" class="home-page-active">
+      <div class="home-background"></div>
+      <div class="home-content">
+        <div class="game-title">
+          <h1>白马湖上的阴谋</h1>
+          <p class="subtitle">一个沉浸式推理游戏</p>
+        </div>
+        <div class="home-menu">
+          <button id="start-new-game" class="home-menu-btn">开始游戏</button>
+          <button id="continue-game" class="home-menu-btn">继续游戏</button>
+          <button id="home-settings" class="home-menu-btn">游戏设置</button>
+          <button id="home-about" class="home-menu-btn">关于游戏</button>
+        </div>
+        <div class="home-footer">
+          <p>© 2024 白马湖上的阴谋 - 所有权利保留</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 游戏主界面 -->
     <div id="game-container">
       <div id="scene-background" class="scene-placeholder">场景图加载中...</div>
       <div id="scene-content">
@@ -34,6 +55,27 @@
             </div>
             <div id="clues-list">
               <!-- 动态生成的线索列表 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 菜单按钮 -->
+        <button id="menu-btn" class="menu-toggle">☰</button>
+
+        <!-- 游戏菜单 -->
+        <div id="game-menu" class="menu-hidden">
+          <div class="menu-content">
+            <div class="menu-header">
+              <h2>游戏菜单</h2>
+              <span id="close-menu" class="close-menu">&times;</span>
+            </div>
+            <div class="menu-body">
+              <button id="save-game" class="menu-btn">💾 保存游戏</button>
+              <button id="load-game" class="menu-btn">📂 读取游戏</button>
+              <button id="settings-btn" class="menu-btn">⚙️ 游戏设置</button>
+              <button id="back-to-title" class="menu-btn">🏠 返回标题</button>
+              <div class="menu-divider"></div>
+              <button id="about-btn" class="menu-btn">ℹ️ 关于游戏</button>
             </div>
           </div>
         </div>
@@ -78,6 +120,19 @@
         <img id="portrait-img" src="" alt="角色头像" style="display: none" />
       </div>
     </div>
-    <script src="script.js"></script>
+
+    <script src="js/core/sceneManager.js"></script>
+    <script src="js/core/dialogManager.js"></script>
+    <script src="js/core/sidebarManager.js"></script>
+    <script src="js/core/gameState.js"></script>
+    <script src="js/core/homePageManager.js"></script>
+    <!-- 数据文件 -->
+    <script src="js/data/clues.js"></script>
+    <script src="js/data/characters.js"></script>
+    <script src="js/data/chapters/prologue.js"></script>
+    <script src="js/data/chapters/chapter1.js"></script>
+
+    <!-- 主入口 -->
+    <script src="js/main.js"></script>
   </body>
 </html>
