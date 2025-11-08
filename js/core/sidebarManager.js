@@ -407,6 +407,31 @@ const sidebarManager = {
     if (gameState.discoverClue(clueId)) {
       this.updateCluesList(); // 这会重新渲染整个线索列表
       this.showClueDiscovery(clueId);
+      // 新增：播放线索发现音效
+      audioManager.playSound("clue_discover");
+      return true;
+    }
+    return false;
+  },
+
+  // 遇到新角色
+  encounterCharacter: function (characterId) {
+    if (gameState.encounterCharacter(characterId)) {
+      this.updateCharactersGrid();
+      this.showCharacterEncounter(characterId);
+
+      // 新增：播放角色遇到音效
+      audioManager.playSound("character_encounter");
+
+      // 如果是第一个角色且未显示过教学指引，显示档案指引
+      if (
+        !this.hasShownTutorial &&
+        gameState.getEncounteredCharacters().length === 1
+      ) {
+        this.showArchiveTutorial();
+        this.hasShownTutorial = true;
+      }
+
       return true;
     }
     return false;

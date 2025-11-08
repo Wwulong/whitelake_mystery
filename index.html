@@ -22,7 +22,7 @@
           <button id="home-about" class="home-menu-btn">关于游戏</button>
         </div>
         <div class="home-footer">
-          <p>© 2024 白马湖上的阴谋 - 所有权利保留</p>
+          <p>© 2025 白马湖上的阴谋 - 所有权利保留为乌龙不是乌冬</p>
         </div>
       </div>
     </div>
@@ -55,27 +55,6 @@
             </div>
             <div id="clues-list">
               <!-- 动态生成的线索列表 -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 菜单按钮 -->
-        <button id="menu-btn" class="menu-toggle">☰</button>
-
-        <!-- 游戏菜单 -->
-        <div id="game-menu" class="menu-hidden">
-          <div class="menu-content">
-            <div class="menu-header">
-              <h2>游戏菜单</h2>
-              <span id="close-menu" class="close-menu">&times;</span>
-            </div>
-            <div class="menu-body">
-              <button id="save-game" class="menu-btn">💾 保存游戏</button>
-              <button id="load-game" class="menu-btn">📂 读取游戏</button>
-              <button id="settings-btn" class="menu-btn">⚙️ 游戏设置</button>
-              <button id="back-to-title" class="menu-btn">🏠 返回标题</button>
-              <div class="menu-divider"></div>
-              <button id="about-btn" class="menu-btn">ℹ️ 关于游戏</button>
             </div>
           </div>
         </div>
@@ -126,6 +105,9 @@
     <script src="js/core/sidebarManager.js"></script>
     <script src="js/core/gameState.js"></script>
     <script src="js/core/homePageManager.js"></script>
+    <script src="js/core/menuManager.js"></script>
+    <script src="js/core/audioManager.js"></script>
+
     <!-- 数据文件 -->
     <script src="js/data/clues.js"></script>
     <script src="js/data/characters.js"></script>
@@ -134,5 +116,86 @@
 
     <!-- 主入口 -->
     <script src="js/main.js"></script>
+
+    <!-- 在 body 末尾添加音频元素 -->
+    <audio id="bgm-player" loop></audio>
+    <audio id="sound-effect"></audio>
+
+    <!-- 修改游戏菜单，添加声音控制 -->
+    <div id="settings-modal" class="modal">
+      <div class="modal-content settings-modal">
+        <span class="close-modal">&times;</span>
+        <h2>游戏设置</h2>
+
+        <div class="settings-group">
+          <h3>音频设置</h3>
+
+          <!-- 背景音乐控制 -->
+          <div class="setting-item">
+            <div class="setting-header">
+              <span>背景音乐</span>
+              <button id="bgm-toggle" class="sound-toggle">🔊</button>
+            </div>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="bgm-volume"
+                class="volume-slider"
+                min="0"
+                max="100"
+                value="50"
+              />
+              <span id="bgm-volume-text" class="volume-text">50%</span>
+            </div>
+          </div>
+
+          <!-- 音效控制 -->
+          <div class="setting-item">
+            <div class="setting-header">
+              <span>音效</span>
+              <button id="sfx-toggle" class="sound-toggle">🔊</button>
+            </div>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="sfx-volume"
+                class="volume-slider"
+                min="0"
+                max="100"
+                value="70"
+              />
+              <span id="sfx-volume-text" class="volume-text">70%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-footer">
+          <button id="apply-settings" class="settings-btn">应用</button>
+          <button id="close-settings" class="settings-btn secondary">
+            关闭
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- 菜单按钮 -->
+    <button id="menu-btn" class="menu-toggle">☰</button>
+
+    <!-- 游戏菜单 -->
+    <div id="game-menu" class="menu-hidden">
+      <div class="menu-content">
+        <div class="menu-header">
+          <h2>游戏菜单</h2>
+          <span id="close-menu" class="close-menu">&times;</span>
+        </div>
+        <div class="menu-body">
+          <button id="save-game" class="menu-btn">💾 保存游戏</button>
+          <button id="load-game" class="menu-btn">📂 读取游戏</button>
+          <button id="settings-btn" class="menu-btn">⚙️ 游戏设置</button>
+          <button id="back-to-title" class="menu-btn">🏠 返回标题</button>
+          <div class="menu-divider"></div>
+          <button id="about-btn" class="menu-btn">ℹ️ 关于游戏</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

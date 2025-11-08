@@ -660,162 +660,204 @@ body {
   font-family: inherit;
 }
 
-/* ===== 菜单按钮 ===== */
-.menu-toggle {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background: rgba(52, 152, 219, 0.9);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  z-index: 1000;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-}
-
-.menu-toggle:hover {
-  background: rgba(41, 128, 185, 0.9);
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-}
-
-/* ===== 游戏菜单容器 ===== */
-#game-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  backdrop-filter: blur(5px);
-  animation: fadeIn 0.3s ease;
-}
-
-/* 菜单隐藏状态 */
-.menu-hidden {
-  display: none !important;
-}
-
-/* ===== 菜单内容区域 ===== */
-.menu-content {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  padding: 0;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  width: 90%;
-  max-width: 400px;
-  min-height: 500px;
+/* ===== 设置模态框样式 ===== */
+.settings-modal {
+  max-width: 500px;
   max-height: 80vh;
-  overflow: hidden;
-  border: 2px solid #3498db;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ===== 菜单头部 ===== */
-.menu-header {
-  background: rgba(52, 152, 219, 0.9);
-  padding: 20px;
-  text-align: center;
-  position: relative;
-  border-bottom: 2px solid #2980b9;
-}
-
-.menu-header h2 {
-  margin: 0;
-  color: white;
-  font-size: 24px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.close-menu {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 30px;
-  color: white;
-  cursor: pointer;
-  line-height: 1;
-  transition: color 0.3s ease;
-}
-
-.close-menu:hover {
-  color: #e74c3c;
-  transform: scale(1.1);
-}
-
-/* ===== 菜单主体 ===== */
-.menu-body {
-  padding: 30px 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
   overflow-y: auto;
 }
 
-/* ===== 菜单按钮样式 ===== */
-.menu-btn {
+.settings-modal h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.settings-group {
+  margin-bottom: 25px;
+}
+
+.settings-group h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.setting-item {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border-left: 4px solid #3498db;
+}
+
+.setting-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 15px 20px;
-  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+.setting-header span {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.sound-toggle {
+  background: #3498db;
   color: white;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   font-size: 16px;
-  font-weight: 500;
   transition: all 0.3s ease;
-  text-align: left;
 }
 
-.menu-btn:hover {
-  background: rgba(52, 152, 219, 0.3);
-  border-color: #3498db;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+.sound-toggle:hover {
+  background: #2980b9;
+  transform: scale(1.1);
 }
 
-.menu-btn:active {
-  transform: translateY(0);
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-/* 特殊按钮样式 */
-#back-to-title {
-  background: rgba(231, 76, 60, 0.2);
-  border-color: rgba(231, 76, 60, 0.3);
+.volume-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+
+  /* 移除所有默认样式 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* 设置轨道背景 */
+  background: #ddd;
 }
 
-#back-to-title:hover {
-  background: rgba(231, 76, 60, 0.4);
-  border-color: #e74c3c;
+/* Webkit 浏览器 (Chrome, Safari, Edge) */
+.volume-slider::-webkit-slider-track {
+  background: #ddd;
+  height: 6px;
+  border-radius: 3px;
+  border: none;
 }
 
-/* ===== 菜单分隔线 ===== */
-.menu-divider {
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  margin: 20px 0;
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #3498db;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-top: -7px; /* 让滑块居中 */
+  transition: all 0.3s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  background: #2980b9;
+  transform: scale(1.2);
+}
+
+/* Firefox 浏览器 */
+.volume-slider::-moz-range-track {
+  background: #ddd;
+  height: 6px;
+  border-radius: 3px;
+  border: none;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #3498db;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  background: #2980b9;
+  transform: scale(1.2);
+}
+
+.volume-text {
+  min-width: 40px;
+  text-align: center;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* 自动播放提示样式 */
+#autoplay-prompt {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 3000;
+  border: 2px solid #3498db;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.5s ease;
+}
+
+#autoplay-prompt p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.settings-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #ecf0f1;
+}
+
+.settings-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+#apply-settings {
+  background: #27ae60;
+  color: white;
+}
+
+#apply-settings:hover {
+  background: #219653;
+}
+
+.settings-btn.secondary {
+  background: #95a5a6;
+  color: white;
+}
+
+.settings-btn.secondary:hover {
+  background: #7f8c8d;
 }
 
 /* ===== 场景相关样式 ===== */
@@ -926,6 +968,238 @@ body {
 
 .interaction-btn:active {
   transform: translateY(0);
+}
+
+/* ===== 主页菜单按钮特殊样式 ===== */
+.home-page-active ~ .menu-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.home-page-active ~ .menu-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.1);
+}
+
+/* 确保菜单按钮在所有状态下都可见 */
+.menu-toggle {
+  display: flex !important;
+  z-index: 1001;
+}
+
+/* ===== 菜单按钮样式 ===== */
+/* 菜单开关按钮（左上角的三条线按钮） */
+.menu-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(52, 152, 219, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  z-index: 1000;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+  background: rgba(41, 128, 185, 0.9);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== 游戏菜单容器 ===== */
+#game-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+/* 菜单隐藏状态 */
+.menu-hidden {
+  display: none !important;
+}
+
+/* 菜单显示状态 */
+#game-menu:not(.menu-hidden) {
+  display: flex !important;
+}
+
+/* ===== 菜单内容区域 ===== */
+.menu-content .menu-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 15px 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+  position: static; /* 修复：移除固定定位 */
+  top: auto;
+  left: auto;
+  backdrop-filter: blur(5px);
+}
+
+/* ===== 菜单头部 ===== */
+.menu-header {
+  background: rgba(52, 152, 219, 0.9);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  border-bottom: 2px solid #2980b9;
+}
+
+.menu-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 24px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.close-menu {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.close-menu:hover {
+  color: #e74c3c;
+  transform: scale(1.1);
+}
+
+/* ===== 菜单主体 ===== */
+/* ===== 确保菜单内容正确显示 ===== */
+.menu-content {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  padding: 0;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 400px;
+  min-height: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  border: 2px solid #3498db;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-body {
+  padding: 30px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+}
+
+/* ===== 菜单按钮样式 ===== */
+
+.menu-content .menu-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.menu-content .menu-btn:active {
+  transform: translateY(0);
+}
+
+/* 特殊按钮样式 */
+.menu-content #back-to-title {
+  background: rgba(231, 76, 60, 0.2);
+  border-color: rgba(231, 76, 60, 0.3);
+}
+
+.menu-content #back-to-title:hover {
+  background: rgba(231, 76, 60, 0.4);
+  border-color: #e74c3c;
+}
+
+/* ===== 菜单分隔线 ===== */
+.menu-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  margin: 20px 0;
+}
+
+/* ===== 响应式设计 ===== */
+@media (max-width: 768px) {
+  .menu-content {
+    width: 95%;
+    min-height: 450px;
+    max-height: 85vh;
+  }
+
+  .menu-toggle {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    top: 15px;
+    left: 15px;
+  }
+
+  .menu-body {
+    padding: 20px 15px;
+    gap: 12px;
+  }
+
+  .menu-btn {
+    padding: 12px 15px;
+    font-size: 15px;
+  }
+
+  .menu-header {
+    padding: 15px;
+  }
+
+  .menu-header h2 {
+    font-size: 20px;
+  }
+
+  .close-menu {
+    top: 10px;
+    right: 15px;
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-content {
+    min-height: 400px;
+  }
 }
 
 /* ===== 档案教学指引 - 全局样式 ===== */
@@ -1110,6 +1384,76 @@ body {
   background: #9b59b6 !important;
 }
 
+/* ===== 对话框文本换行修复 ===== */
+
+/* 全局修复：确保对话框文本始终换行 */
+#dialog-text {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.5;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* 移除打字机效果对文本布局的影响 */
+.typing-effect {
+  white-space: normal !important;
+  border-right: none;
+  animation: none;
+}
+
+/* 调整对话框内容区域布局 */
+#dialog-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 25px 120px 25px 180px; /* 减少右侧空间，增加文本区域 */
+  min-height: 130px; /* 确保最小高度 */
+}
+
+/* 重新设计对话框布局，确保文本有足够空间 */
+#vn-dialog {
+  height: auto; /* 改为自动高度 */
+  min-height: 180px; /* 保持最小高度 */
+  max-height: 300px; /* 设置最大高度防止过大 */
+  overflow: hidden;
+}
+
+/* 调整角色头像位置 */
+#speaker-portrait {
+  left: 20px;
+  bottom: 0%;
+  width: 140px;
+  height: 160px;
+}
+
+/* 调整角色名字位置 */
+#speaker-name {
+  top: -40px;
+  left: 20px;
+}
+
+/* ===== 响应式调整 ===== */
+
+/* 中等屏幕 (1200px 及以下) */
+@media (max-width: 1200px) {
+  #dialog-content {
+    padding: 25px 100px 25px 160px;
+  }
+}
+
+/* 小屏幕 (992px 及以下) */
+@media (max-width: 992px) {
+  #dialog-content {
+    padding: 20px 80px 20px 140px;
+  }
+
+  #speaker-portrait {
+    width: 120px;
+    height: 140px;
+  }
+}
+
 /* ===== 动画定义 ===== */
 @keyframes gradientShift {
   0% {
@@ -1292,34 +1636,39 @@ body {
     margin: 0 auto 15px;
   }
 
-  /* 菜单响应式 */
-  .menu-content {
+  /* 设置模态框响应式 */
+  .settings-modal {
     width: 95%;
-    min-height: 450px;
-    max-height: 85vh;
+    margin: 10% auto;
   }
 
-  .menu-toggle {
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
-    top: 15px;
-    left: 15px;
+  .slider-container {
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .menu-body {
-    padding: 20px 15px;
-    gap: 12px;
+  .settings-footer {
+    flex-direction: column;
+  }
+  /* 新增：确保对话框文本在小屏幕上自动换行 */
+  #dialog-text {
+    white-space: normal !important; /* 强制换行 */
+    word-wrap: break-word !important; /* 长单词换行 */
+    overflow-wrap: break-word !important; /* 现代浏览器的长单词换行 */
+    line-height: 1.4; /* 增加行高提高可读性 */
   }
 
-  .menu-btn {
-    padding: 12px 15px;
-    font-size: 15px;
+  /* 移除打字机效果在小屏幕上的限制 */
+  .typing-effect {
+    white-space: normal !important;
+    border-right: none; /* 在小屏幕上隐藏闪烁光标 */
+    animation: none; /* 移除打字机动画 */
   }
 
-  /* 教程弹窗响应式 */
-  .tutorial-content {
-    max-width: 350px;
+  /* 调整对话框内容区域的内边距 */
+  #dialog-content {
+    padding: 20px 80px 20px 130px; /* 减少右侧内边距，给文本更多空间 */
+    align-items: flex-start; /* 文本顶部对齐 */
   }
 }
 
@@ -1347,25 +1696,6 @@ body {
     font-size: 12px;
   }
 
-  /* 菜单响应式 */
-  .menu-content {
-    min-height: 400px;
-  }
-
-  .menu-header {
-    padding: 15px;
-  }
-
-  .menu-header h2 {
-    font-size: 20px;
-  }
-
-  .close-menu {
-    top: 10px;
-    right: 15px;
-    font-size: 26px;
-  }
-
   /* 教程弹窗响应式 */
   .tutorial-content {
     max-width: 320px;
@@ -1390,5 +1720,28 @@ body {
     padding: 12px 15px;
     right: 10px;
     top: 10px;
+  }
+  /* 进一步调整小屏幕的对话框布局 */
+  #dialog-content {
+    padding: 15px 60px 15px 110px; /* 进一步减少内边距 */
+  }
+
+  #dialog-text {
+    font-size: 15px; /* 稍微减小字体大小 */
+    line-height: 1.5; /* 增加行高 */
+  }
+
+  /* 调整头像大小 */
+  #speaker-portrait {
+    width: 90px;
+    height: 120px;
+  }
+
+  /* 调整角色名字位置 */
+  #speaker-name {
+    top: -35px;
+    left: 15px;
+    font-size: 14px;
+    padding: 6px 15px;
   }
 }

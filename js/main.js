@@ -11,18 +11,21 @@ function initGame() {
   gameState.characters = charactersData;
   gameState.currentScript = prologueScript;
 
+  // 初始化游戏状态
+  if (typeof gameState.init === "function") {
+    gameState.init();
+  }
+
   console.log("线索数据加载:", cluesData.length, "条");
   console.log("角色数据加载:", charactersData.length, "个");
   console.log("脚本数据加载:", prologueScript.length, "步");
 
-  // 2. 初始化主页
-  homePageManager.init();
-
-  // 3. 初始化管理器（但不立即显示游戏）
+  // 2. 初始化管理器
+  menuManager.init(); // 先初始化菜单管理器
+  homePageManager.init(); // 然后初始化主页
   dialogManager.init();
   sidebarManager.init();
-  menuManager.init();
-
+  audioManager.init();
   console.log("游戏初始化完成 - 显示主页");
 }
 
@@ -34,6 +37,25 @@ function initializeGame() {
 
   // 绑定事件
   bindInitialEvents();
+
+  // 确保菜单按钮显示
+  if (typeof menuManager !== "undefined") {
+    menuManager.setMenuButtonVisibility(true);
+  }
+  // 调试：检查菜单状态
+  console.log("游戏开始 - 菜单状态检查:");
+  const menuBtn = document.getElementById("menu-btn");
+  console.log("菜单按钮:", menuBtn);
+  console.log("菜单按钮显示状态:", menuBtn ? menuBtn.style.display : "未找到");
+
+  if (menuBtn && menuBtn.style.display !== "flex") {
+    console.log("修复菜单按钮显示状态");
+    menuBtn.style.display = "flex";
+  }
+  // 确保菜单按钮显示
+  if (typeof menuManager !== "undefined") {
+    menuManager.setMenuButtonVisibility(true);
+  }
 
   console.log("游戏开始！");
 }
@@ -137,7 +159,7 @@ function completePrologue() {
   continueBtn.className = "interaction-btn";
   continueBtn.textContent = "继续游戏";
   continueBtn.onclick = function () {
-    alert("游戏进入下一章：白马湖现场调查");
+    alert("下一章：白马湖现场调查");
     // 这里可以跳转到下一章
   };
   document.getElementById("interaction-area").appendChild(continueBtn);
@@ -212,221 +234,3 @@ function showThoughtText(character, text) {
   dialogManager.setDialog(character, `（心想：${text}）`);
   document.getElementById("speaker-name").classList.add("thought-bubble");
 }
-
-//菜单
-// ===== 修复版菜单管理器 =====
-const menuManager = {
-  init: function () {
-    // 先移除可能已存在的菜单元素（避免重复）
-    const existingMenu = document.getElementById("game-menu");
-    const existingMenuBtn = document.getElementById("menu-btn");
-    if (existingMenu) existingMenu.remove();
-    if (existingMenuBtn) existingMenuBtn.remove();
-
-    // 创建菜单元素
-    this.createMenuElements();
-    this.bindEvents();
-  },
-
-  createMenuElements: function () {
-    // 创建菜单按钮
-    const menuBtn = document.createElement("button");
-    menuBtn.id = "menu-btn";
-    menuBtn.className = "menu-toggle";
-    menuBtn.innerHTML = "☰";
-    menuBtn.title = "游戏菜单";
-    document.body.appendChild(menuBtn);
-
-    // 创建菜单容器
-    const gameMenu = document.createElement("div");
-    gameMenu.id = "game-menu";
-    gameMenu.className = "menu-hidden";
-    gameMenu.innerHTML = `
-      <div class="menu-content">
-        <div class="menu-header">
-          <h2>游戏菜单</h2>
-          <span id="close-menu" class="close-menu">&times;</span>
-        </div>
-        <div class="menu-body">
-          <button id="save-game" class="menu-btn">💾 保存游戏</button>
-          <button id="load-game" class="menu-btn">📂 读取游戏</button>
-          <button id="settings-btn" class="menu-btn">⚙️ 游戏设置</button>
-          <button id="back-to-title" class="menu-btn">🏠 返回标题</button>
-          <div class="menu-divider"></div>
-          <button id="about-btn" class="menu-btn">ℹ️ 关于游戏</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(gameMenu);
-
-    // 重新获取元素引用
-    this.menuBtn = document.getElementById("menu-btn");
-    this.gameMenu = document.getElementById("game-menu");
-    this.closeMenuBtn = document.getElementById("close-menu");
-    this.saveGameBtn = document.getElementById("save-game");
-    this.loadGameBtn = document.getElementById("load-game");
-    this.settingsBtn = document.getElementById("settings-btn");
-    this.backToTitleBtn = document.getElementById("back-to-title");
-    this.aboutBtn = document.getElementById("about-btn");
-
-    // 添加菜单CSS样式
-    this.addMenuStyles();
-  },
-
-  addMenuStyles: function () {
-    // 移除可能已存在的样式
-    const existingStyle = document.getElementById("menu-styles");
-    if (existingStyle) existingStyle.remove();
-
-    const style = document.createElement("style");
-    style.id = "menu-styles";
-    style.textContent = this.getMenuStyles();
-    document.head.appendChild(style);
-  },
-
-  getMenuStyles: function () {
-    return `
-    `;
-  },
-
-  bindEvents: function () {
-    // 菜单按钮点击事件
-    this.menuBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.showMenu();
-    });
-
-    // 关闭菜单
-    this.closeMenuBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.hideMenu();
-    });
-
-    // 点击菜单外部关闭
-    this.gameMenu.addEventListener("click", (e) => {
-      if (e.target === this.gameMenu) {
-        this.hideMenu();
-      }
-    });
-
-    // 菜单功能按钮
-    const buttons = [
-      { element: this.saveGameBtn, action: () => this.saveGame() },
-      { element: this.loadGameBtn, action: () => this.loadGame() },
-      { element: this.settingsBtn, action: () => this.showSettings() },
-      { element: this.backToTitleBtn, action: () => this.backToTitle() },
-      { element: this.aboutBtn, action: () => this.showAbout() },
-    ];
-
-    buttons.forEach((btn) => {
-      if (btn.element) {
-        btn.element.addEventListener("click", (e) => {
-          e.stopPropagation();
-          btn.action();
-        });
-      }
-    });
-
-    // ESC键关闭菜单
-    document.addEventListener("keydown", (e) => {
-      if (
-        e.key === "Escape" &&
-        !this.gameMenu.classList.contains("menu-hidden")
-      ) {
-        this.hideMenu();
-      }
-    });
-  },
-
-  showMenu: function () {
-    this.gameMenu.classList.remove("menu-hidden");
-    gameState.isMenuOpen = true;
-  },
-
-  hideMenu: function () {
-    this.gameMenu.classList.add("menu-hidden");
-    gameState.isMenuOpen = false;
-  },
-
-  saveGame: function () {
-    if (gameState.saveGame) {
-      gameState.saveGame();
-      this.showNotification("游戏已保存！");
-    } else {
-      this.showNotification("存档功能开发中...");
-    }
-    this.hideMenu();
-  },
-
-  loadGame: function () {
-    if (gameState.loadGame && gameState.loadGame()) {
-      this.showNotification("游戏已加载！");
-      sceneManager.setScene(gameState.currentScene);
-      showCurrentStep();
-      sidebarManager.updateCluesList();
-    } else {
-      this.showNotification("没有找到存档文件");
-    }
-    this.hideMenu();
-  },
-
-  showSettings: function () {
-    this.showNotification("设置功能开发中...");
-    this.hideMenu();
-  },
-
-  backToTitle: function () {
-    if (confirm("确定要返回标题画面吗？未保存的进度将会丢失。")) {
-      // 使用主页管理器返回主页
-      homePageManager.showHome();
-      this.showNotification("已返回标题画面");
-      this.hideMenu();
-    }
-  },
-
-  showAbout: function () {
-    this.showNotification("白马湖上的阴谋 v1.0\\n一个沉浸式推理游戏");
-    this.hideMenu();
-  },
-
-  showNotification: function (message) {
-    // 移除已存在的通知
-    const existingNotification = document.getElementById("menu-notification");
-    if (existingNotification) existingNotification.remove();
-
-    const notification = document.createElement("div");
-    notification.id = "menu-notification";
-    notification.style.cssText = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.95);
-      color: white;
-      padding: 25px 35px;
-      border-radius: 12px;
-      z-index: 3000;
-      font-size: 16px;
-      border: 2px solid #3498db;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-      text-align: center;
-      max-width: 320px;
-      word-wrap: break-word;
-      line-height: 1.5;
-      font-family: "Microsoft YaHei", sans-serif;
-      white-space: pre-line;
-    `;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-      notification.style.opacity = "0";
-      notification.style.transition = "opacity 0.5s ease";
-      setTimeout(() => {
-        if (notification.parentNode) {
-          notification.parentNode.removeChild(notification);
-        }
-      }, 500);
-    }, 2000);
-  },
-};

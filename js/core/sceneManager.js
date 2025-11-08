@@ -24,7 +24,10 @@ const sceneManager = {
         sceneBackground.style.backgroundImage = `url('${sceneImages[sceneKey]}')`;
         sceneBackground.classList.remove("scene-placeholder");
         sceneBackground.textContent = "";
+        // 新增：播放场景背景音乐
+        audioManager.playSceneBgm(sceneKey);
       };
+
       img.onerror = () => {
         console.error("场景图片加载失败:", sceneImages[sceneKey]);
         sceneBackground.classList.add("scene-placeholder");

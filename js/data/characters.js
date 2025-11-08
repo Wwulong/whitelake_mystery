@@ -6,9 +6,11 @@ const charactersData = [
     portrait: "images/characters/lion-portrait.png",
     details: {
       age: "35岁",
-      position: "刑警队长",
-      description: "经验丰富的刑警队长，以敏锐的直觉著称",
-      background: "从警12年，破获多起重大案件，以果断和正义感闻名",
+      position: "栗枫市警察局刑警队长",
+      description:
+        "经验丰富的刑警队长，以敏锐的狮子直觉著称，没有任何线索能逃脱他的眼睛",
+      background:
+        "从警12年，破获“栗枫市獭宅水泥砌尸案”、“下城河遗尸案”等多起重大案件，以果断和正义感闻名。\n“刑警的能力不能用侦破数量来简单的概括，要是发生的案子能少一点，那就是最好的了。”",
     },
     encountered: false, // 添加这个属性
   },

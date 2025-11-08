@@ -139,6 +139,9 @@ const dialogManager = {
       this.completeTyping();
       return;
     }
+
+    // 新增：播放对话框前进音效
+    audioManager.playSound("dialog_advance");
     advanceGameDialog();
   },
 };

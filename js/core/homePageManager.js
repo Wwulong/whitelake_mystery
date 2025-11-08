@@ -11,6 +11,24 @@ const homePageManager = {
     }
 
     this.bindEvents();
+    this.ensureMenuButtonVisible();
+
+    // 初始化完成后播放主页音乐
+    this.playHomeBgm();
+  },
+
+  // 新增：确保菜单按钮可见的方法
+  ensureMenuButtonVisible: function () {
+    if (typeof menuManager !== "undefined") {
+      menuManager.setMenuButtonVisibility(true);
+    } else {
+      // 如果菜单管理器还未初始化，延迟设置
+      setTimeout(() => {
+        if (typeof menuManager !== "undefined") {
+          menuManager.setMenuButtonVisibility(true);
+        }
+      }, 100);
+    }
   },
 
   bindEvents: function () {
@@ -40,6 +58,9 @@ const homePageManager = {
     // 重置游戏状态
     this.resetGameState();
 
+    // 停止主页音乐
+    this.stopHomeBgm();
+
     // 默认解锁玩家角色（狮子）
     const playerCharacter = gameState.characters.find((c) => c.id === 1);
     if (playerCharacter) {
@@ -60,6 +81,9 @@ const homePageManager = {
 
   continueGame: function () {
     if (this.hasSaveData()) {
+      // 停止主页音乐
+      this.stopHomeBgm();
+
       if (gameState.loadGame()) {
         this.showGame();
         sceneManager.setScene(gameState.currentScene);
@@ -83,7 +107,7 @@ const homePageManager = {
 
 一个沉浸式推理游戏
 在这个充满谜团的故事中，
-您将扮演一名狮子警官，
+您将从狮子警官的视角，
 揭开白马湖背后的真相...
 
 开发团队：我靠就是我我老牛逼了
@@ -98,13 +122,43 @@ const homePageManager = {
     this.homePage.classList.add("home-page-hidden");
     this.gameContainer.classList.remove("game-container-hidden");
     this.gameContainer.classList.add("game-container-visible");
+
+    // 确保菜单按钮显示
+    this.ensureMenuButtonVisible();
+
+    console.log("切换到游戏界面完成");
   },
 
   showHome: function () {
     this.homePage.classList.remove("home-page-hidden");
     this.homePage.classList.add("home-page-active");
-    this.gameContainer.classList.remove("game-container-visible");
-    this.gameContainer.classList.add("game-container-hidden");
+    this.gameContainer.classList.remove("game-container-hidden");
+    this.gameContainer.classList.add("game-container-visible");
+
+    this.ensureMenuButtonVisible();
+
+    // 返回主页时播放主页音乐
+    this.playHomeBgm();
+  },
+
+  // 播放主页背景音乐
+  playHomeBgm: function () {
+    // 延迟执行，确保音频管理器已初始化
+    setTimeout(() => {
+      if (typeof audioManager !== "undefined") {
+        console.log("尝试播放主页背景音乐");
+        audioManager.playHomeBgm();
+      } else {
+        console.warn("音频管理器未初始化，无法播放主页音乐");
+      }
+    }, 500);
+  },
+
+  // 停止主页背景音乐
+  stopHomeBgm: function () {
+    if (typeof audioManager !== "undefined") {
+      audioManager.stopAllBgm();
+    }
   },
 
   resetGameState: function () {
@@ -160,5 +214,26 @@ const homePageManager = {
         }
       }, 500);
     }, 3000);
+  },
+  bindEvents: function () {
+    const buttons = [
+      { id: "start-new-game", action: () => this.startNewGame() },
+      { id: "continue-game", action: () => this.continueGame() },
+      { id: "home-settings", action: () => this.showSettings() },
+      { id: "home-about", action: () => this.showAbout() },
+    ];
+
+    buttons.forEach((btn) => {
+      const element = document.getElementById(btn.id);
+      if (element) {
+        element.addEventListener("click", () => {
+          // 播放按钮点击音效
+          if (typeof audioManager !== "undefined") {
+            audioManager.playSound("button_click");
+          }
+          btn.action();
+        });
+      }
+    });
   },
 };
