@@ -13,6 +13,8 @@ const sidebarManager = {
     // 如果没有侧栏，直接返回
     if (!this.sidebar) return;
 
+    this.ensureSidebarZIndex();
+
     // 让 tab-icon 可聚焦（无障碍）
     this.sidebar.querySelectorAll(".tab-icon").forEach((icon) => {
       if (!icon.hasAttribute("tabindex")) icon.setAttribute("tabindex", "0");
@@ -73,6 +75,16 @@ const sidebarManager = {
     this.updateCharactersGrid();
   },
 
+  // 新增：确保侧边栏全局定位
+  ensureGlobalPosition: function () {
+    if (!this.sidebar) return;
+
+    this.sidebar.style.position = "fixed";
+    this.sidebar.style.right = "0";
+    this.sidebar.style.top = "50%";
+    this.sidebar.style.transform = "translateY(-50%)";
+    this.sidebar.style.zIndex = "2500";
+  },
   hasShownTutorial: false, // 新增：是否已显示过教学指引
 
   // 修改：遇到新角色的方法
@@ -93,6 +105,37 @@ const sidebarManager = {
       return true;
     }
     return false;
+  },
+
+  // 新增：显示侧边栏
+  showSidebar: function () {
+    if (this.sidebar) {
+      this.sidebar.style.display = "flex";
+    }
+  },
+
+  // 新增：隐藏侧边栏
+  hideSidebar: function () {
+    if (this.sidebar) {
+      this.sidebar.style.display = "none";
+    }
+  },
+
+  // 新增：确保侧边栏层级的方法
+  ensureSidebarZIndex: function () {
+    if (this.sidebar) {
+      this.sidebar.style.zIndex = "2500";
+    }
+
+    const tabContents = document.querySelectorAll(".tab-content");
+    tabContents.forEach((tab) => {
+      tab.style.zIndex = "2502";
+    });
+
+    const tabIcons = document.querySelectorAll(".tab-icon");
+    tabIcons.forEach((icon) => {
+      icon.style.zIndex = "2501";
+    });
   },
 
   // 新增：显示档案教学指引
@@ -180,6 +223,8 @@ const sidebarManager = {
   },
 
   updateTabContent: function (tabId) {
+    // 在显示标签内容前确保层级
+    this.ensureSidebarZIndex();
     if (tabId === "clues-tab") {
       this.updateCluesList();
     } else if (tabId === "characters-tab") {
@@ -341,6 +386,11 @@ const sidebarManager = {
     const character = gameState.characters.find((c) => c.id === characterId);
     if (!character || !this.characterModal || !this.characterDetailsEl) return;
 
+    // 新增：在显示角色档案前隐藏所有立绘
+    if (typeof illustrationManager !== "undefined") {
+      illustrationManager.hideAllIllustrations();
+    }
+
     // 使用安全的 DOM 方法构建模态内容（避免 innerHTML 注入风险）
     this.characterDetailsEl.innerHTML = ""; // 清空
 
@@ -400,6 +450,68 @@ const sidebarManager = {
   hideCharacterModal: function () {
     if (!this.characterModal) return;
     this.characterModal.style.display = "none";
+
+    // 改进：关闭角色档案后，确保恢复当前对话的立绘
+    if (gameState.isDialogActive) {
+      const currentStep = prologueScript[gameState.currentStep];
+      console.log("关闭角色档案，尝试恢复立绘，当前步骤:", currentStep);
+
+      if (currentStep && typeof illustrationManager !== "undefined") {
+        // 延迟执行确保弹窗完全关闭
+        setTimeout(() => {
+          // 根据当前步骤类型决定是否显示立绘
+          if (currentStep.type === "dialog" || currentStep.type === "thought") {
+            // 使用步骤中的立绘信息
+            if (currentStep.illustration) {
+              const {
+                characterId,
+                position = "left",
+                expression = "normal",
+              } = currentStep.illustration;
+              illustrationManager.showIllustration(
+                characterId,
+                position,
+                expression
+              );
+              console.log(
+                "恢复立绘 - 使用步骤立绘信息:",
+                characterId,
+                position
+              );
+            }
+            // 如果没有专门的立绘信息，使用角色ID
+            else if (currentStep.characterId) {
+              illustrationManager.showIllustration(
+                currentStep.characterId,
+                "left"
+              );
+              console.log("恢复立绘 - 使用角色ID:", currentStep.characterId);
+            }
+            // 如果只有说话者名字，尝试匹配角色
+            else if (currentStep.speaker) {
+              // 这里需要根据说话者名字找到对应的角色ID
+              const character = gameState.characters.find(
+                (c) => c.name === currentStep.speaker
+              );
+              if (character) {
+                illustrationManager.showIllustration(character.id, "left");
+                console.log(
+                  "恢复立绘 - 通过说话者名字:",
+                  currentStep.speaker,
+                  character.id
+                );
+              }
+            }
+          } else {
+            // 对于叙述性步骤，隐藏立绘
+            illustrationManager.hideAllIllustrations();
+            console.log("恢复立绘 - 隐藏所有立绘（叙述性步骤）");
+          }
+        }, 50); // 稍微增加延迟确保DOM更新完成
+      }
+    } else {
+      console.log("关闭角色档案 - 没有活跃对话，不恢复立绘");
+    }
   },
 
   // 发现新线索（在游戏进程中调用）

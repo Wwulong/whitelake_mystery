@@ -1,6 +1,7 @@
 // 主页管理器
 const homePageManager = {
-  hasShownTutorial: false, // 新增：是否已显示过教学指引
+  hasShownTutorial: false,
+
   init: function () {
     this.homePage = document.getElementById("home-page");
     this.gameContainer = document.getElementById("game-container");
@@ -15,6 +16,21 @@ const homePageManager = {
 
     // 初始化完成后播放主页音乐
     this.playHomeBgm();
+  },
+
+  // 简化继续游戏逻辑
+  continueGame: function () {
+    if (!saveManager.hasSaveData()) {
+      this.showNotification("没有找到存档文件");
+      return;
+    }
+
+    // 统一使用菜单管理器的存档界面
+    if (typeof menuManager !== "undefined") {
+      menuManager.showSaveSlots("load");
+    } else {
+      this.showNotification("菜单系统未初始化");
+    }
   },
 
   // 新增：确保菜单按钮可见的方法
@@ -32,33 +48,35 @@ const homePageManager = {
   },
 
   bindEvents: function () {
-    // 开始新游戏
-    document.getElementById("start-new-game").addEventListener("click", () => {
-      this.startNewGame();
-    });
+    const buttons = [
+      { id: "start-new-game", action: () => this.startNewGame() },
+      { id: "continue-game", action: () => this.continueGame() },
+      { id: "home-settings", action: () => this.showSettings() },
+      { id: "home-about", action: () => this.showAbout() },
+    ];
 
-    // 继续游戏
-    document.getElementById("continue-game").addEventListener("click", () => {
-      this.continueGame();
-    });
-
-    // 设置
-    document.getElementById("home-settings").addEventListener("click", () => {
-      this.showSettings();
-    });
-
-    // 关于
-    document.getElementById("home-about").addEventListener("click", () => {
-      this.showAbout();
+    buttons.forEach((btn) => {
+      const element = document.getElementById(btn.id);
+      if (element) {
+        element.addEventListener("click", () => {
+          if (typeof audioManager !== "undefined") {
+            audioManager.playSound("button_click");
+          }
+          btn.action();
+        });
+      }
     });
   },
 
-  // homePageManager.js - 在开始新游戏时初始化玩家角色
   startNewGame: function () {
     // 重置游戏状态
-    this.resetGameState();
+    if (
+      typeof gameState !== "undefined" &&
+      typeof gameState.resetGameState === "function"
+    ) {
+      gameState.resetGameState();
+    }
 
-    // 停止主页音乐
     this.stopHomeBgm();
 
     // 默认解锁玩家角色（狮子）
@@ -80,26 +98,141 @@ const homePageManager = {
   },
 
   continueGame: function () {
-    if (this.hasSaveData()) {
-      // 停止主页音乐
-      this.stopHomeBgm();
-
-      if (gameState.loadGame()) {
-        this.showGame();
-        sceneManager.setScene(gameState.currentScene);
-        showCurrentStep();
-        sidebarManager.updateCluesList();
-        this.showNotification("游戏已加载！");
-      } else {
-        this.showNotification("加载存档失败");
-      }
-    } else {
+    if (!saveManager.hasSaveData()) {
       this.showNotification("没有找到存档文件");
+      return;
+    }
+
+    // 确保菜单管理器已初始化
+    if (typeof menuManager !== "undefined") {
+      menuManager.showSaveSlots("load");
+    } else {
+      console.warn("菜单管理器未初始化，尝试重新初始化");
+      setTimeout(() => {
+        if (typeof menuManager !== "undefined") {
+          menuManager.showSaveSlots("load");
+        } else {
+          this.showNotification("菜单系统初始化失败");
+        }
+      }, 100);
     }
   },
 
   showSettings: function () {
-    this.showNotification("设置功能开发中...");
+    // 显示设置模态框
+    const settingsModal = document.getElementById("settings-modal");
+    if (settingsModal) {
+      settingsModal.style.display = "block";
+
+      // 初始化设置界面
+      this.initSettingsUI();
+    }
+  },
+
+  // 新增：初始化设置界面
+  initSettingsUI: function () {
+    // 获取UI元素
+    const bgmSlider = document.getElementById("bgm-volume");
+    const sfxSlider = document.getElementById("sfx-volume");
+    const bgmToggle = document.getElementById("bgm-toggle");
+    const sfxToggle = document.getElementById("sfx-toggle");
+    const applyBtn = document.getElementById("apply-settings");
+    const closeBtn = document.getElementById("close-settings");
+    const settingsModal = document.getElementById("settings-modal");
+
+    // 初始化滑块和按钮状态
+    if (typeof audioManager !== "undefined") {
+      audioManager.applySettings();
+    }
+
+    // 绑定事件
+    if (bgmSlider) {
+      bgmSlider.addEventListener("input", (e) => {
+        const value = e.target.value;
+        const volumeText = document.getElementById("bgm-volume-text");
+        if (volumeText) volumeText.textContent = value + "%";
+        if (typeof audioManager !== "undefined") {
+          audioManager.setBgmVolume(parseInt(value));
+        }
+      });
+    }
+
+    if (sfxSlider) {
+      sfxSlider.addEventListener("input", (e) => {
+        const value = e.target.value;
+        const volumeText = document.getElementById("sfx-volume-text");
+        if (volumeText) volumeText.textContent = value + "%";
+        if (typeof audioManager !== "undefined") {
+          audioManager.setSfxVolume(parseInt(value));
+        }
+      });
+    }
+
+    if (bgmToggle) {
+      bgmToggle.addEventListener("click", () => {
+        if (typeof audioManager !== "undefined") {
+          const isEnabled = audioManager.toggleBgm();
+          bgmToggle.textContent = isEnabled ? "🔊" : "🔇";
+        }
+      });
+    }
+
+    if (sfxToggle) {
+      sfxToggle.addEventListener("click", () => {
+        if (typeof audioManager !== "undefined") {
+          const isEnabled = audioManager.toggleSfx();
+          sfxToggle.textContent = isEnabled ? "🔊" : "🔇";
+        }
+      });
+    }
+
+    if (applyBtn) {
+      applyBtn.addEventListener("click", () => {
+        if (typeof audioManager !== "undefined") {
+          audioManager.saveSettings();
+        }
+        this.showNotification("设置已应用");
+        if (settingsModal) settingsModal.style.display = "none";
+      });
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        // 重新加载设置以取消未应用的更改
+        if (typeof audioManager !== "undefined") {
+          audioManager.loadSettings();
+          audioManager.applySettings();
+        }
+        if (settingsModal) settingsModal.style.display = "none";
+      });
+    }
+
+    // 点击外部关闭
+    if (settingsModal) {
+      settingsModal.addEventListener("click", (e) => {
+        if (e.target === settingsModal) {
+          if (typeof audioManager !== "undefined") {
+            audioManager.loadSettings();
+            audioManager.applySettings();
+          }
+          settingsModal.style.display = "none";
+        }
+      });
+    }
+
+    // 关闭按钮
+    const modalClose = settingsModal
+      ? settingsModal.querySelector(".close-modal")
+      : null;
+    if (modalClose) {
+      modalClose.addEventListener("click", () => {
+        if (typeof audioManager !== "undefined") {
+          audioManager.loadSettings();
+          audioManager.applySettings();
+        }
+        if (settingsModal) settingsModal.style.display = "none";
+      });
+    }
   },
 
   showAbout: function () {
@@ -123,6 +256,10 @@ const homePageManager = {
     this.gameContainer.classList.remove("game-container-hidden");
     this.gameContainer.classList.add("game-container-visible");
 
+    // 在游戏界面显示侧边栏
+    if (typeof sidebarManager !== "undefined") {
+      sidebarManager.showSidebar();
+    }
     // 确保菜单按钮显示
     this.ensureMenuButtonVisible();
 
@@ -134,6 +271,15 @@ const homePageManager = {
     this.homePage.classList.add("home-page-active");
     this.gameContainer.classList.remove("game-container-hidden");
     this.gameContainer.classList.add("game-container-visible");
+
+    if (typeof dialogManager !== "undefined") {
+      dialogManager.hideDialog();
+    }
+
+    // 在主页隐藏侧边栏
+    if (typeof sidebarManager !== "undefined") {
+      sidebarManager.hideSidebar();
+    }
 
     this.ensureMenuButtonVisible();
 
@@ -158,19 +304,6 @@ const homePageManager = {
   stopHomeBgm: function () {
     if (typeof audioManager !== "undefined") {
       audioManager.stopAllBgm();
-    }
-  },
-
-  resetGameState: function () {
-    gameState.currentStep = 0;
-    gameState.currentChapter = "prologue";
-    gameState.discoveredClues = [];
-
-    // 重置线索状态
-    if (gameState.clues) {
-      gameState.clues.forEach((clue) => {
-        clue.found = false;
-      });
     }
   },
 

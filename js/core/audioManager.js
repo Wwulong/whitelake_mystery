@@ -20,7 +20,7 @@ const audioManager = {
   // 场景背景音乐映射
   sceneBgm: {
     "police-station-outside": "audio/bgm/J_outside.mp3",
-    "police-station-inside": "audio/bgm/J_inside.mp3",
+    "police-station-inside": "audio/bgm/J_outside.mp3",
     "white-horse-lake": "audio/bgm/lake.m4a",
     // 可以继续添加其他场景的背景音乐
   },

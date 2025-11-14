@@ -1,10 +1,11 @@
 const cluesData = [
   {
     id: 1,
-    title: "现场打斗痕迹",
-    description: "白马湖边发现明显的打斗痕迹",
+    title: "电话报警记录",
+    description:
+      "接到的紧急电话:目击者称就会被就把户口放假啊v飞机卡办卡的的啊的哈v是v开往官方。",
     found: false,
-    chapter: "prologue", // 新增：所属章节
+    chapter: "prologue",
   },
   {
     id: 2,
@@ -15,11 +16,12 @@ const cluesData = [
   },
   {
     id: 3,
-    title: "电话报警记录",
-    description: "刚刚接到的紧急电话",
+    title: "现场打斗痕迹",
+    description: "白马湖边发现明显的打斗痕迹",
     found: false,
-    chapter: "prologue",
+    chapter: "prologue", // 新增：所属章节
   },
+
   {
     id: 4,
     title: "受害者身份",
@@ -50,6 +52,13 @@ const cluesData = [
   },
   {
     id: 8,
+    title: "手机残骸",
+    description: "被砸碎的手机，SIM卡被取走",
+    found: false,
+    chapter: "chapter1",
+  },
+  {
+    id: 9,
     title: "手机残骸",
     description: "被砸碎的手机，SIM卡被取走",
     found: false,

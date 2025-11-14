@@ -42,86 +42,9 @@
           <div id="dynamic-options"></div>
         </div>
       </div>
-
-      <!-- 右侧功能标签 -->
-      <div id="right-sidebar">
-        <!-- 线索标签 -->
-        <div class="sidebar-tab" id="clues-tab">
-          <div class="tab-icon">🔍</div>
-          <div class="tab-content">
-            <div class="tab-header">
-              <h3>线索收集</h3>
-              <span class="close-tab">×</span>
-            </div>
-            <div id="clues-list">
-              <!-- 动态生成的线索列表 -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 角色档案标签 -->
-        <div class="sidebar-tab" id="characters-tab">
-          <div class="tab-icon">👥</div>
-          <div class="tab-content">
-            <div class="tab-header">
-              <h3>角色档案</h3>
-              <span class="close-tab">×</span>
-            </div>
-            <div id="characters-grid">
-              <!-- 角色头像网格 -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 角色详情弹窗 -->
-      <div id="character-modal" class="modal">
-        <div class="modal-content">
-          <span class="close-modal">&times;</span>
-          <div id="character-details">
-            <!-- 动态生成的角色详情 -->
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- 底部对话框 -->
-    <div id="vn-dialog" class="vn-dialog-hidden">
-      <div id="speaker-name"></div>
-      <div id="dialog-content">
-        <p id="dialog-text"></p>
-      </div>
-      <div id="continue-indicator">▼ 点击继续</div>
-      <div id="speaker-portrait">
-        <div id="portrait-placeholder" class="portrait-placeholder">
-          角色头像
-        </div>
-        <img id="portrait-img" src="" alt="角色头像" style="display: none" />
-      </div>
-    </div>
-
-    <script src="js/core/sceneManager.js"></script>
-    <script src="js/core/dialogManager.js"></script>
-    <script src="js/core/sidebarManager.js"></script>
-    <script src="js/core/gameState.js"></script>
-    <script src="js/core/homePageManager.js"></script>
-    <script src="js/core/menuManager.js"></script>
-    <script src="js/core/audioManager.js"></script>
-
-    <!-- 数据文件 -->
-    <script src="js/data/clues.js"></script>
-    <script src="js/data/characters.js"></script>
-    <script src="js/data/chapters/prologue.js"></script>
-    <script src="js/data/chapters/chapter1.js"></script>
-
-    <!-- 主入口 -->
-    <script src="js/main.js"></script>
-
-    <!-- 在 body 末尾添加音频元素 -->
-    <audio id="bgm-player" loop></audio>
-    <audio id="sound-effect"></audio>
-
-    <!-- 修改游戏菜单，添加声音控制 -->
+    <!-- 模态框 -->
     <div id="settings-modal" class="modal">
       <div class="modal-content settings-modal">
         <span class="close-modal">&times;</span>
@@ -197,5 +120,101 @@
         </div>
       </div>
     </div>
+
+    <!-- 右侧功能标签 -->
+    <div id="right-sidebar">
+      <!-- 线索标签 -->
+      <div class="sidebar-tab" id="clues-tab">
+        <div class="tab-icon">🔍</div>
+        <div class="tab-content">
+          <div class="tab-header">
+            <h3>线索收集</h3>
+            <span class="close-tab">×</span>
+          </div>
+          <div id="clues-list">
+            <!-- 动态生成的线索列表 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 角色档案标签 -->
+      <div class="sidebar-tab" id="characters-tab">
+        <div class="tab-icon">👥</div>
+        <div class="tab-content">
+          <div class="tab-header">
+            <h3>角色档案</h3>
+            <span class="close-tab">×</span>
+          </div>
+          <div id="characters-grid">
+            <!-- 角色头像网格 -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 角色详情弹窗 -->
+    <div id="character-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div id="character-details">
+          <!-- 动态生成的角色详情 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部对话框 -->
+    <div id="vn-dialog" class="vn-dialog-hidden">
+      <div id="speaker-name"></div>
+      <div id="dialog-content">
+        <p id="dialog-text"></p>
+      </div>
+      <div id="continue-indicator">▼ 点击继续</div>
+      <div id="speaker-portrait">
+        <div id="portrait-placeholder" class="portrait-placeholder">
+          角色头像
+        </div>
+        <img id="portrait-img" src="" alt="角色头像" style="display: none" />
+      </div>
+    </div>
+    <!-- 立绘容器 -->
+    <div id="character-illustrations">
+      <!-- 左侧立绘 -->
+      <div class="illustration illustration-left" style="display: none">
+        <img src="" alt="角色立绘" class="illustration-img" />
+      </div>
+
+      <!-- 右侧立绘 -->
+      <div class="illustration illustration-right" style="display: none">
+        <img src="" alt="角色立绘" class="illustration-img" />
+      </div>
+
+      <!-- 中央立绘 -->
+      <div class="illustration illustration-center" style="display: none">
+        <img src="" alt="角色立绘" class="illustration-img" />
+      </div>
+    </div>
+
+    <script src="js/core/sceneManager.js"></script>
+    <script src="js/core/dialogManager.js"></script>
+    <script src="js/core/sidebarManager.js"></script>
+    <script src="js/core/gameState.js"></script>
+    <script src="js/core/homePageManager.js"></script>
+    <script src="js/core/menuManager.js"></script>
+    <script src="js/core/audioManager.js"></script>
+    <script src="js/core/illustrationManager.js"></script>
+    <script src="js/core/saveManager.js"></script>
+
+    <!-- 数据文件 -->
+    <script src="js/data/clues.js"></script>
+    <script src="js/data/characters.js"></script>
+    <script src="js/data/chapters/prologue.js"></script>
+    <script src="js/data/chapters/chapter1.js"></script>
+
+    <!-- 主入口 -->
+    <script src="js/main.js"></script>
+
+    <!-- 音频元素 -->
+    <audio id="bgm-player" loop></audio>
+    <audio id="sound-effect"></audio>
   </body>
 </html>

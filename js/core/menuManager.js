@@ -1,5 +1,17 @@
 // ===== 菜单管理器 =====
 const menuManager = {
+  // 元素引用
+  menuBtn: null,
+  gameMenu: null,
+  closeMenuBtn: null,
+  saveGameBtn: null,
+  loadGameBtn: null,
+  settingsBtn: null,
+  backToTitleBtn: null,
+  aboutBtn: null,
+
+  // ===== 1. 初始化方法 =====
+
   init: function () {
     console.log("开始初始化菜单管理器...");
 
@@ -34,7 +46,7 @@ const menuManager = {
 
     // 确保菜单按钮初始状态正确
     if (this.menuBtn) {
-      this.menuBtn.style.display = "flex"; // 在主页时隐藏
+      this.menuBtn.style.display = "flex";
     }
 
     // 确保菜单容器初始状态正确
@@ -112,7 +124,7 @@ const menuManager = {
     // 确保元素存在
     if (!this.menuBtn || !this.gameMenu) {
       console.error("菜单元素未找到");
-      return;
+      this.createMenuElements();
     }
 
     // 菜单按钮点击事件
@@ -195,11 +207,18 @@ const menuManager = {
     console.log("菜单事件绑定完成");
   },
 
+  // ===== 2. 菜单显示控制 =====
+
   showMenu: function () {
     if (this.gameMenu) {
       this.gameMenu.style.display = "flex";
       this.gameMenu.classList.remove("menu-hidden");
       gameState.isMenuOpen = true;
+
+      // 新增：打开菜单时关闭所有侧边栏标签
+      if (typeof sidebarManager !== "undefined") {
+        sidebarManager.closeAllTabs();
+      }
 
       // 新增：根据当前页面调整菜单选项
       this.adjustMenuForCurrentPage();
@@ -207,48 +226,6 @@ const menuManager = {
     }
   },
 
-  // 新增：根据当前页面调整菜单选项
-  adjustMenuForCurrentPage: function () {
-    const homePage = document.getElementById("home-page");
-    const isHomePage =
-      homePage && homePage.classList.contains("home-page-active");
-
-    if (isHomePage) {
-      // 在主页时，禁用保存和加载游戏按钮
-      if (this.saveGameBtn) {
-        this.saveGameBtn.disabled = true;
-        this.saveGameBtn.style.opacity = "0.5";
-        this.saveGameBtn.title = "在标题页面不可用";
-      }
-      if (this.loadGameBtn) {
-        this.loadGameBtn.disabled = true;
-        this.loadGameBtn.style.opacity = "0.5";
-        this.loadGameBtn.title = "在标题页面不可用";
-      }
-      // 修改返回标题按钮的文本
-      if (this.backToTitleBtn) {
-        this.backToTitleBtn.textContent = "🏠 刷新页面";
-        this.backToTitleBtn.title = "刷新页面";
-      }
-    } else {
-      // 在游戏页面时，恢复按钮状态
-      if (this.saveGameBtn) {
-        this.saveGameBtn.disabled = false;
-        this.saveGameBtn.style.opacity = "1";
-        this.saveGameBtn.title = "";
-      }
-      if (this.loadGameBtn) {
-        this.loadGameBtn.disabled = false;
-        this.loadGameBtn.style.opacity = "1";
-        this.loadGameBtn.title = "";
-      }
-      // 恢复返回标题按钮的文本
-      if (this.backToTitleBtn) {
-        this.backToTitleBtn.textContent = "🏠 返回标题";
-        this.backToTitleBtn.title = "返回标题画面";
-      }
-    }
-  },
   hideMenu: function () {
     if (this.gameMenu) {
       this.gameMenu.style.display = "none";
@@ -276,27 +253,393 @@ const menuManager = {
     }
   },
 
+  // 新增：根据当前页面调整菜单选项
+  adjustMenuForCurrentPage: function () {
+    const homePage = document.getElementById("home-page");
+    const isHomePage =
+      homePage && homePage.classList.contains("home-page-active");
+
+    const buttons = [
+      {
+        element: this.saveGameBtn,
+        enabled: !isHomePage,
+        homeText: "在主页面不可存档",
+        gameText: "💾 保存游戏",
+      },
+      {
+        element: this.loadGameBtn,
+        enabled: !isHomePage,
+        homeText: "主页面请直接点继续游戏读取存档",
+        gameText: "📂 读取游戏",
+      },
+      {
+        element: this.backToTitleBtn,
+        enabled: true,
+        homeText: "🏠 刷新页面",
+        gameText: "🏠 返回标题",
+      },
+    ];
+
+    buttons.forEach((btn) => {
+      if (btn.element) {
+        if (isHomePage) {
+          btn.element.disabled = !btn.enabled;
+          btn.element.style.opacity = btn.enabled ? "1" : "0.5";
+          btn.element.title = btn.homeText;
+          if (btn.homeText) btn.element.textContent = btn.homeText;
+        } else {
+          btn.element.disabled = false;
+          btn.element.style.opacity = "1";
+          btn.element.title = "";
+          if (btn.gameText) btn.element.textContent = btn.gameText;
+        }
+      }
+    });
+  },
+
+  // ===== 3. 存档系统方法 =====
+
   saveGame: function () {
-    if (gameState.saveGame) {
-      gameState.saveGame();
-      this.showNotification("游戏已保存！");
-    } else {
-      this.showNotification("存档功能开发中...");
-    }
-    this.hideMenu();
+    this.showSaveSlots("save");
   },
 
   loadGame: function () {
-    if (gameState.loadGame && gameState.loadGame()) {
-      this.showNotification("游戏已加载！");
-      sceneManager.setScene(gameState.currentScene);
-      showCurrentStep();
-      sidebarManager.updateCluesList();
-    } else {
-      this.showNotification("没有找到存档文件");
-    }
-    this.hideMenu();
+    this.showSaveSlots("load");
   },
+
+  showSaveSlots: function (mode) {
+    const modal = document.createElement("div");
+    modal.className = "save-load-modal";
+
+    // 预先获取所有存档槽信息
+    const slotsInfo = Array(saveManager.config.saveSlots)
+      .fill()
+      .map((_, index) => ({
+        index,
+        info: saveManager.getSaveSlotInfo(index),
+      }));
+
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>${mode === "save" ? "💾 保存游戏" : "📂 读取游戏"}</h2>
+          <span class="close-modal">&times;</span>
+        </div>
+        
+         ${
+           mode === "save"
+             ? `
+        <div class="save-notice">
+          <p>💡 <strong>提示：</strong>快速存档将使用第一个可用槽位，手动保存可选择任意槽位。</p>
+        </div>
+      `
+             : ""
+         }
+      
+        <div class="save-slots-container">
+          ${slotsInfo
+            .map(
+              ({ index, info }) => `
+            <div class="save-slot ${
+              !info ? "empty-slot" : ""
+            }" data-slot="${index}">
+              ${
+                !info
+                  ? this.renderEmptySlot(mode)
+                  : this.renderSaveSlot(info, mode)
+              }
+            </div>
+          `
+            )
+            .join("")}
+        </div>
+        
+        <div class="modal-footer">
+          ${this.renderFooterButtons(mode)}
+          <button class="modal-btn cancel-btn">取消</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    this.bindSaveSlotEvents(modal, mode);
+  },
+
+  // 渲染空存档槽
+  renderEmptySlot: function (mode) {
+    if (mode === "save") {
+      return `
+      <div class="slot-header">
+        <span class="slot-number">空存档位</span>
+        <span class="slot-date">未使用</span>
+      </div>
+      <div class="slot-info">
+        <div class="slot-info-item">
+          <span>点击保存当前进度</span>
+        </div>
+      </div>
+      <div class="slot-actions">
+        <button class="slot-btn save-btn">保存到此</button>
+      </div>
+    `;
+    } else {
+      return `
+      <div class="empty-slot-icon">📁</div>
+      <div class="empty-slot-text">空存档位</div>
+    `;
+    }
+  },
+
+  // 渲染有内容的存档槽
+  renderSaveSlot: function (slotInfo, mode) {
+    return `
+      <div class="slot-header">
+        <span class="slot-number">存档 ${slotInfo.slot + 1}</span>
+        <span class="slot-date">${slotInfo.date}</span>
+      </div>
+      <div class="slot-info">
+        <div class="slot-info-item">
+          <span>${this.getChapterName(slotInfo.chapter)}</span>
+        </div>
+        <div class="slot-info-item">
+          <span>${slotInfo.clueCount} 个线索</span>
+        </div>
+        <div class="slot-info-item">
+          <span>${this.formatPlayTime(slotInfo.playTime)}</span>
+        </div>
+      </div>
+      <div class="slot-actions">
+        ${
+          mode === "save"
+            ? `<button class="slot-btn save-btn">保存</button>`
+            : `<button class="slot-btn load-btn">读取</button>`
+        }
+        <button class="slot-btn delete-btn">删除</button>
+      </div>
+    `;
+  },
+
+  // 渲染底部按钮
+  renderFooterButtons: function (mode) {
+    const quickSaveSlot = saveManager.getSaveSlotInfo(
+      saveManager.config.saveSlots - 1
+    );
+
+    if (mode === "save") {
+      return `<button class="modal-btn quick-save-btn">快速存档</button>`;
+    } else {
+      return `
+        <button class="modal-btn quick-load-btn" ${
+          !quickSaveSlot ? "disabled" : ""
+        }>
+          快速读档
+        </button>
+      `;
+    }
+  },
+
+  // 绑定存档槽事件
+  bindSaveSlotEvents: function (modal, mode) {
+    // 关闭按钮事件
+    modal.querySelector(".close-modal").onclick = () => modal.remove();
+    modal.querySelector(".cancel-btn").onclick = () => modal.remove();
+
+    // 存档槽事件
+    modal.querySelectorAll(".save-slot").forEach((slot) => {
+      const slotIndex = parseInt(slot.dataset.slot);
+
+      if (mode === "save") {
+        this.bindSaveEvents(slot, slotIndex, modal);
+      } else {
+        this.bindLoadEvents(slot, slotIndex, modal);
+      }
+
+      // 删除事件（两种模式都需要）
+      this.bindDeleteEvent(slot, slotIndex, modal, mode);
+    });
+
+    // 快速操作事件
+    this.bindQuickActionEvents(modal, mode);
+
+    // 点击外部关闭
+    modal.onclick = (e) => {
+      if (e.target === modal) modal.remove();
+    };
+  },
+
+  // 绑定保存事件
+  bindSaveEvents: function (slot, slotIndex, modal) {
+    const saveBtn = slot.querySelector(".save-btn");
+    if (saveBtn) {
+      saveBtn.onclick = (e) => {
+        e.stopPropagation(); // 防止事件冒泡
+
+        // 添加加载状态
+        const originalText = saveBtn.textContent;
+        saveBtn.textContent = "保存中...";
+        saveBtn.disabled = true;
+
+        setTimeout(() => {
+          if (saveManager.saveGame(slotIndex)) {
+            this.showNotification("游戏已保存！");
+            modal.remove();
+            this.hideMenu();
+          } else {
+            this.showNotification("保存失败，请重试");
+            // 恢复按钮状态
+            saveBtn.textContent = "保存";
+            saveBtn.disabled = false;
+          }
+        }, 300);
+      };
+    }
+  },
+
+  // 绑定加载事件
+  bindLoadEvents: function (slot, slotIndex, modal) {
+    const loadBtn = slot.querySelector(".load-btn");
+    if (loadBtn && !loadBtn.disabled) {
+      loadBtn.onclick = () => {
+        if (this.loadGameFromSlot(slotIndex)) {
+          modal.remove();
+          this.hideMenu();
+        }
+      };
+    }
+  },
+
+  // 绑定删除事件
+  bindDeleteEvent: function (slot, slotIndex, modal, mode) {
+    const deleteBtn = slot.querySelector(".delete-btn");
+    if (deleteBtn) {
+      deleteBtn.onclick = () => {
+        const slotInfo = saveManager.getSaveSlotInfo(slotIndex);
+        const confirmMessage = slotInfo
+          ? `确定要删除存档 ${slotIndex + 1} 吗？\n章节: ${this.getChapterName(
+              slotInfo.chapter
+            )}\n时间: ${slotInfo.date}`
+          : "确定要删除这个存档吗？";
+
+        if (confirm(confirmMessage)) {
+          if (saveManager.deleteSave(slotIndex)) {
+            this.showNotification("存档已删除");
+            modal.remove();
+            // 重新打开存档界面
+            this.showSaveSlots(mode);
+          } else {
+            this.showNotification("删除失败");
+          }
+        }
+      };
+    }
+  },
+
+  // 绑定快速操作事件
+  bindQuickActionEvents: function (modal, mode) {
+    if (mode === "save") {
+      const quickSaveBtn = modal.querySelector(".quick-save-btn");
+      if (quickSaveBtn) {
+        quickSaveBtn.onclick = () => {
+          // 添加加载状态
+          quickSaveBtn.textContent = "保存中...";
+          quickSaveBtn.disabled = true;
+
+          setTimeout(() => {
+            if (saveManager.quickSave()) {
+              this.showNotification("快速存档完成！");
+              modal.remove();
+              this.hideMenu();
+            } else {
+              this.showNotification("快速存档失败");
+              quickSaveBtn.textContent = "快速存档";
+              quickSaveBtn.disabled = false;
+            }
+          }, 300);
+        };
+      }
+    } else {
+      const quickLoadBtn = modal.querySelector(".quick-load-btn");
+      if (quickLoadBtn && !quickLoadBtn.disabled) {
+        quickLoadBtn.onclick = () => {
+          // 添加加载状态
+          quickLoadBtn.textContent = "加载中...";
+          quickLoadBtn.disabled = true;
+
+          setTimeout(() => {
+            if (this.loadGameFromSlot(saveManager.config.saveSlots - 1)) {
+              modal.remove();
+              this.hideMenu();
+            } else {
+              quickLoadBtn.textContent = "快速读档";
+              quickLoadBtn.disabled = false;
+            }
+          }, 300);
+        };
+      }
+    }
+  },
+
+  // 从指定槽位加载游戏
+  loadGameFromSlot: function (slotIndex) {
+    if (saveManager.loadGame(slotIndex)) {
+      this.showNotification("游戏已加载！");
+
+      // 新增：检查当前是否在主页，如果是则切换到游戏界面
+      const homePage = document.getElementById("home-page");
+      const gameContainer = document.getElementById("game-container");
+
+      if (homePage && homePage.classList.contains("home-page-active")) {
+        console.log("检测到在主页加载存档，切换到游戏界面");
+
+        // 切换到游戏界面
+        homePage.classList.remove("home-page-active");
+        homePage.classList.add("home-page-hidden");
+
+        if (gameContainer) {
+          gameContainer.classList.remove("game-container-hidden");
+          gameContainer.classList.add("game-container-visible");
+        }
+      }
+      // 恢复游戏界面状态
+      this.restoreGameInterface();
+
+      return true;
+    } else {
+      this.showNotification("加载失败，存档可能已损坏");
+      return false;
+    }
+  },
+
+  // 恢复游戏界面状态
+  restoreGameInterface: function () {
+    // 恢复场景
+    if (typeof sceneManager !== "undefined") {
+      sceneManager.setScene(gameState.currentScene);
+    }
+
+    // 恢复游戏进度显示
+    if (typeof showCurrentStep === "function") {
+      showCurrentStep();
+    }
+
+    // 更新侧边栏
+    if (typeof sidebarManager !== "undefined") {
+      sidebarManager.updateCluesList();
+      sidebarManager.updateCharactersGrid();
+    }
+
+    // 确保菜单按钮显示
+    this.setMenuButtonVisibility(true);
+
+    // 停止主页音乐
+    if (typeof homePageManager !== "undefined") {
+      homePageManager.stopHomeBgm();
+    }
+
+    console.log("从主页成功切换到游戏界面");
+  },
+
+  // ===== 4. 其他功能方法 =====
 
   showSettings: function () {
     // 显示设置模态框
@@ -415,7 +758,6 @@ const menuManager = {
     }
   },
 
-  // menuManager.js - 修改 backToTitle 方法
   backToTitle: function () {
     // 如果已经在主页，不重复执行
     const homePage = document.getElementById("home-page");
@@ -439,9 +781,33 @@ const menuManager = {
 
   showAbout: function () {
     this.showNotification(
-      "白马湖上的阴谋 v1.0\\n一个沉浸式推理游戏诞生地还挺艰难的"
+      "白马湖上的阴谋 v1.0\n一个沉浸式推理游戏诞生地还挺艰难的"
     );
     this.hideMenu();
+  },
+
+  // ===== 5. 工具方法 =====
+
+  // 获取章节显示名称
+  getChapterName: function (chapter) {
+    const chapters = {
+      prologue: "序章",
+      chapter1: "第一章",
+      chapter2: "第二章",
+    };
+    return chapters[chapter] || chapter;
+  },
+
+  // 格式化游戏时间
+  formatPlayTime: function (seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+
+    if (hours > 0) {
+      return `${hours}小时${minutes}分钟`;
+    } else {
+      return `${minutes}分钟`;
+    }
   },
 
   showNotification: function (message) {

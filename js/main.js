@@ -21,8 +21,19 @@ function initGame() {
   console.log("脚本数据加载:", prologueScript.length, "步");
 
   // 2. 初始化管理器
-  menuManager.init(); // 先初始化菜单管理器
-  homePageManager.init(); // 然后初始化主页
+  if (typeof saveManager !== "undefined") {
+    saveManager.init();
+  }
+  homePageManager.init();
+  menuManager.init();
+
+  // 新增：初始化立绘管理器
+  if (typeof illustrationManager !== "undefined") {
+    illustrationManager.init();
+    console.log("立绘管理器初始化完成");
+  } else {
+    console.error("立绘管理器未定义！");
+  }
   dialogManager.init();
   sidebarManager.init();
   audioManager.init();
@@ -70,6 +81,24 @@ function bindInitialEvents() {
   }
 }
 
+// 自动存档函数
+function autoSave() {
+  // 在重要节点自动存档
+  const shouldAutoSave =
+    gameState.currentStep % 5 === 0 || gameState.flags?.chapterChanged;
+
+  if (shouldAutoSave && typeof saveManager !== "undefined") {
+    if (saveManager.autoSave()) {
+      console.log("自动存档完成");
+    }
+
+    // 重置章节切换标志
+    if (gameState.flags) {
+      gameState.flags.chapterChanged = false;
+    }
+  }
+}
+
 function showCurrentStep() {
   const step = prologueScript[gameState.currentStep];
   const mainText = document.getElementById("main-text");
@@ -82,11 +111,18 @@ function showCurrentStep() {
   if (step.scene) {
     sceneManager.setScene(step.scene);
   }
-
+  if (interactionArea) {
+    interactionArea.style.display = "flex";
+  }
   if (step.type === "narrator") {
-    // 叙述性文本
-    dialogManager.setDialog("", step.content);
-    mainText.style.display = "none";
+    // 叙述性文本 - 隐藏所有立绘
+    if (typeof illustrationManager !== "undefined") {
+      illustrationManager.hideAllIllustrations();
+    }
+    // 对于叙述性文本，隐藏对话框，显示主文本
+    dialogManager.hideDialog();
+    mainText.style.display = "block";
+    mainText.textContent = step.content;
 
     // 设置交互按钮
     if (step.interaction === "push-door") {
@@ -95,9 +131,12 @@ function showCurrentStep() {
       createInteractionButton(step.interaction);
     }
   } else if (step.type === "dialog" || step.type === "thought") {
-    // 对话或内心独白
+    // 对话或内心独白 - 通过 dialogManager 显示立绘
     mainText.style.display = "none";
     document.getElementById("push-door").style.display = "none";
+    if (interactionArea) {
+      interactionArea.style.display = "none";
+    }
 
     if (step.type === "thought") {
       // 内心独白特殊处理
@@ -112,7 +151,8 @@ function showCurrentStep() {
         step.speaker,
         step.content,
         step.portrait,
-        step.characterId
+        step.characterId,
+        step.illustration // 传递立绘信息
       );
     }
   }
@@ -123,6 +163,18 @@ function showCurrentStep() {
       sidebarManager.discoverClue(clueId);
     });
   }
+  // 在关键步骤强制自动存档
+  if (
+    gameState.currentStep === 0 ||
+    gameState.currentStep === prologueScript.length - 1
+  ) {
+    setTimeout(() => {
+      if (typeof saveManager !== "undefined") {
+        saveManager.autoSave();
+      }
+    }, 500);
+  }
+  autoSave();
 }
 
 function advanceGameDialog() {
@@ -234,3 +286,22 @@ function showThoughtText(character, text) {
   dialogManager.setDialog(character, `（心想：${text}）`);
   document.getElementById("speaker-name").classList.add("thought-bubble");
 }
+
+// 监听存档事件
+document.addEventListener("saveManagerEvent", function (event) {
+  const detail = event.detail;
+  console.log(`存档事件: ${detail.type}`, detail);
+
+  // 可以根据事件类型执行特定操作
+  switch (detail.type) {
+    case "save":
+      // 保存成功后的处理
+      break;
+    case "load":
+      // 加载成功后的处理
+      break;
+    case "delete":
+      // 删除存档后的处理
+      break;
+  }
+});
