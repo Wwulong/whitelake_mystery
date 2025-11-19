@@ -44,6 +44,78 @@
       </div>
     </div>
 
+    <!-- 问号帮助按钮 -->
+    <button id="help-btn" class="help-toggle">?</button>
+
+    <!-- 帮助弹窗 -->
+    <div id="help-modal" class="modal">
+      <div class="modal-content help-modal">
+        <span class="close-modal">&times;</span>
+        <div class="help-header">
+          <h2>🎮 游戏指南</h2>
+        </div>
+        <div class="help-body">
+          <div class="help-section">
+            <h3>📖 游戏玩法</h3>
+            <p>这是一个推理解谜游戏，你需要：</p>
+            <ul>
+              <li>通过对话推进剧情</li>
+              <li>收集线索和证据</li>
+              <li>与角色互动获取信息</li>
+              <li>点击屏幕继续对话</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h3>🔐 密码系统</h3>
+            <p>点击 <strong>🔐 密码按钮</strong> 可以：</p>
+            <ul>
+              <li>输入特殊密码解锁隐藏内容</li>
+              <li>查看游戏进度统计</li>
+              <li>获得调查提示和彩蛋</li>
+              <li>在侧边栏查看已解锁密码</li>
+            </ul>
+            <p class="help-tip">试试输入：进度、我是福尔摩斯、开发者万岁</p>
+          </div>
+
+          <div class="help-section">
+            <h3>🔍 线索系统</h3>
+            <p>点击 <strong>🔍 线索按钮</strong> 可以：</p>
+            <ul>
+              <li>查看已发现的线索</li>
+              <li>搜索特定线索</li>
+              <li>查看线索详细信息</li>
+              <li>添加个人笔记</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h3>👥 角色档案</h3>
+            <p>点击 <strong>👥 角色按钮</strong> 可以：</p>
+            <ul>
+              <li>查看遇到的角色信息</li>
+              <li>了解角色背景故事</li>
+              <li>查看角色关系</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h3>💾 存档系统</h3>
+            <p>点击 <strong>☰ 菜单按钮</strong> 可以：</p>
+            <ul>
+              <li>保存游戏进度</li>
+              <li>读取之前的存档</li>
+              <li>调整游戏设置</li>
+              <li>返回标题界面</li>
+            </ul>
+          </div>
+        </div>
+        <div class="help-footer">
+          <p>祝您游戏愉快！如有问题请查看此帮助指南。</p>
+        </div>
+      </div>
+    </div>
+
     <!-- 模态框 -->
     <div id="settings-modal" class="modal">
       <div class="modal-content settings-modal">
@@ -100,9 +172,10 @@
         </div>
       </div>
     </div>
-    <!-- 菜单按钮 -->
-    <button id="menu-btn" class="menu-toggle">☰</button>
-
+    <div id="top-buttons-container">
+      <button id="menu-btn" class="menu-toggle">☰</button>
+      <button id="password-btn" class="menu-toggle password-toggle">🔐</button>
+    </div>
     <!-- 游戏菜单 -->
     <div id="game-menu" class="menu-hidden">
       <div class="menu-content">
@@ -203,10 +276,12 @@
     <script src="js/core/audioManager.js"></script>
     <script src="js/core/illustrationManager.js"></script>
     <script src="js/core/saveManager.js"></script>
+    <script src="js/core/passwordManager.js"></script>
 
     <!-- 数据文件 -->
     <script src="js/data/clues.js"></script>
     <script src="js/data/characters.js"></script>
+    <script src="js/data/passwords.js"></script>
     <script src="js/data/chapters/prologue.js"></script>
     <script src="js/data/chapters/chapter1.js"></script>
 

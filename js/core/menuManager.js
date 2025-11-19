@@ -71,6 +71,14 @@ const menuManager = {
   createMenuElements: function () {
     console.log("创建菜单元素...");
 
+    // 创建顶部按钮容器
+    if (!document.getElementById("top-buttons-container")) {
+      const buttonsContainer = document.createElement("div");
+      buttonsContainer.id = "top-buttons-container";
+      document.body.appendChild(buttonsContainer);
+      console.log("顶部按钮容器已创建");
+    }
+
     // 只在元素不存在时创建菜单按钮
     if (!document.getElementById("menu-btn")) {
       const menuBtn = document.createElement("button");
@@ -78,8 +86,23 @@ const menuManager = {
       menuBtn.className = "menu-toggle";
       menuBtn.innerHTML = "☰";
       menuBtn.title = "游戏菜单";
-      document.body.appendChild(menuBtn);
+      document.getElementById("top-buttons-container").appendChild(menuBtn);
       console.log("菜单按钮已创建");
+    } else {
+      console.log("菜单按钮已存在，跳过创建");
+    }
+
+    // 只在元素不存在时创建密码按钮
+    if (!document.getElementById("password-btn")) {
+      const passwordBtn = document.createElement("button");
+      passwordBtn.id = "password-btn";
+      passwordBtn.className = "menu-toggle password-toggle";
+      passwordBtn.innerHTML = "🔐";
+      passwordBtn.title = "彩蛋密码";
+      document.getElementById("top-buttons-container").appendChild(passwordBtn);
+      console.log("密码按钮已创建");
+    } else {
+      console.log("密码按钮已存在，跳过创建");
     }
 
     // 只在元素不存在时创建菜单容器
@@ -106,6 +129,8 @@ const menuManager = {
     `;
       document.body.appendChild(gameMenu);
       console.log("菜单容器已创建");
+    } else {
+      console.log("菜单容器已存在，跳过创建");
     }
 
     // 重新获取元素引用

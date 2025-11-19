@@ -281,10 +281,23 @@ const homePageManager = {
       sidebarManager.hideSidebar();
     }
 
+    // 隐藏密码按钮
+    if (typeof passwordManager !== "undefined") {
+      passwordManager.setPasswordButtonVisibility(false);
+    }
+
     this.ensureMenuButtonVisible();
 
     // 返回主页时播放主页音乐
     this.playHomeBgm();
+  },
+
+  // 在隐藏主页时显示密码按钮
+  hideHome: function () {
+    // 显示密码按钮
+    if (typeof passwordManager !== "undefined") {
+      passwordManager.setPasswordButtonVisibility(true);
+    }
   },
 
   // 播放主页背景音乐

@@ -141,6 +141,11 @@ const gameState = {
   setChapter: function (chapter) {
     this.currentChapter = chapter;
     console.log(`切换到章节: ${chapter}`);
+
+    // 重置进度类密码
+    if (typeof passwordManager !== "undefined") {
+      passwordManager.resetProgressPasswords();
+    }
   },
 
   // 设置对话框状态

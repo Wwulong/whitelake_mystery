@@ -1,10 +1,34 @@
 // 游戏主入口
 document.addEventListener("DOMContentLoaded", function () {
+  // 先初始化游戏状态
+  if (typeof gameState !== "undefined") {
+    gameState.init();
+  }
+
+  // 然后初始化主页管理器
+  if (typeof homePageManager !== "undefined") {
+    homePageManager.init();
+  }
+
+  // 接着初始化菜单管理器
+  if (typeof menuManager !== "undefined") {
+    menuManager.init();
+  }
+
+  // 最后初始化密码管理器
+  if (typeof passwordManager !== "undefined") {
+    passwordManager.init();
+  }
   initGame();
 });
 
 function initGame() {
   console.log("开始初始化游戏...");
+
+  // 初始化帮助按钮
+  initHelpButton();
+
+  console.log("游戏开始！");
 
   // 1. 先加载数据到 gameState
   gameState.clues = cluesData;
@@ -27,15 +51,16 @@ function initGame() {
   homePageManager.init();
   menuManager.init();
 
-  // 新增：初始化立绘管理器
+  // 初始化立绘管理器
   if (typeof illustrationManager !== "undefined") {
     illustrationManager.init();
     console.log("立绘管理器初始化完成");
   } else {
     console.error("立绘管理器未定义！");
   }
-  dialogManager.init();
+
   sidebarManager.init();
+  dialogManager.init();
   audioManager.init();
   console.log("游戏初始化完成 - 显示主页");
 }
@@ -53,6 +78,7 @@ function initializeGame() {
   if (typeof menuManager !== "undefined") {
     menuManager.setMenuButtonVisibility(true);
   }
+
   // 调试：检查菜单状态
   console.log("游戏开始 - 菜单状态检查:");
   const menuBtn = document.getElementById("menu-btn");
@@ -78,6 +104,70 @@ function bindInitialEvents() {
       gameState.currentStep = 1;
       showCurrentStep();
     });
+  }
+}
+
+// 初始化帮助按钮功能
+function initHelpButton() {
+  const helpBtn = document.getElementById("help-btn");
+  const helpModal = document.getElementById("help-modal");
+
+  if (!helpBtn || !helpModal) {
+    console.error("帮助按钮或弹窗元素未找到");
+    return;
+  }
+
+  // 帮助按钮点击事件
+  helpBtn.addEventListener("click", function () {
+    showHelpModal();
+  });
+
+  // 关闭按钮事件
+  const closeBtn = helpModal.querySelector(".close-modal");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function () {
+      hideHelpModal();
+    });
+  }
+
+  // 点击外部关闭
+  helpModal.addEventListener("click", function (e) {
+    if (e.target === helpModal) {
+      hideHelpModal();
+    }
+  });
+
+  // ESC键关闭
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && helpModal.style.display === "block") {
+      hideHelpModal();
+    }
+  });
+}
+
+// 显示帮助弹窗
+function showHelpModal() {
+  const helpModal = document.getElementById("help-modal");
+  if (!helpModal) return;
+
+  helpModal.style.display = "block";
+
+  // 播放音效
+  if (typeof audioManager !== "undefined") {
+    audioManager.playSound("menu_open");
+  }
+}
+
+// 隐藏帮助弹窗
+function hideHelpModal() {
+  const helpModal = document.getElementById("help-modal");
+  if (!helpModal) return;
+
+  helpModal.style.display = "none";
+
+  // 播放音效
+  if (typeof audioManager !== "undefined") {
+    audioManager.playSound("menu_close");
   }
 }
 

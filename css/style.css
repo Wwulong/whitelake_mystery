@@ -1028,18 +1028,12 @@ body {
   transform: scale(1.1);
 }
 
-/* 确保菜单按钮在所有状态下都可见 */
-.menu-toggle {
-  display: flex !important;
-  z-index: 1001;
-}
-
 /* ===== 菜单按钮样式 ===== */
 /* 菜单开关按钮（左上角的三条线按钮） */
 .menu-toggle {
-  position: fixed;
-  top: 20px;
-  left: 20px;
+  position: relative;
+  top: auto;
+  left: auto;
   background: rgba(52, 152, 219, 0.9);
   color: white;
   border: none;
@@ -1054,6 +1048,7 @@ body {
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  margin: 0;
 }
 
 .menu-toggle:hover {
@@ -1391,6 +1386,855 @@ body {
   box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
 }
 
+/* ===== 线索搜索样式 ===== */
+.clue-search-container {
+  padding: 15px;
+  border-bottom: 1px solid #ecf0f1;
+  background: #f8f9fa;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.clue-search-input {
+  width: 100%;
+  padding: 10px 40px 10px 35px;
+  border: 1px solid #bdc3c7;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.clue-search-input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #7f8c8d;
+  pointer-events: none;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #7f8c8d;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.clear-search-btn:hover {
+  background: #ecf0f1;
+  color: #e74c3c;
+}
+
+.search-stats {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.search-stats.has-results {
+  color: #27ae60;
+}
+
+.search-stats.no-results {
+  color: #e74c3c;
+}
+
+/* 搜索高亮样式 */
+.search-highlight {
+  background-color: #ffeaa7;
+  padding: 1px 2px;
+  border-radius: 2px;
+  font-weight: bold;
+}
+
+/* 搜索空状态 */
+.search-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* ===== 问号帮助按钮样式 ===== */
+.help-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  font-weight: bold;
+  background: rgba(52, 152, 219, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.help-toggle:hover {
+  background: rgba(41, 128, 185, 0.9);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* 主页状态下的帮助按钮 */
+.home-page-active ~ .help-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.home-page-active ~ .help-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.1);
+}
+
+/* ===== 帮助弹窗样式 ===== */
+.help-modal {
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.help-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.help-header h2 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 24px;
+}
+
+.help-body {
+  padding: 0 10px;
+}
+
+.help-section {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+
+.help-section h3 {
+  color: #2c3e50;
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.help-section p {
+  margin: 0 0 10px 0;
+  line-height: 1.5;
+  color: #34495e;
+}
+
+.help-section ul {
+  margin: 10px 0;
+  padding-left: 20px;
+  color: #34495e;
+}
+
+.help-section li {
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.help-tip {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #856404;
+  margin-top: 10px !important;
+  font-style: italic;
+}
+
+.help-footer {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 1px solid #ecf0f1;
+  margin-top: 10px;
+}
+
+.help-footer p {
+  color: #7f8c8d;
+  font-size: 14px;
+  font-style: italic;
+  margin: 0;
+}
+
+/* ===== 密码系统样式 ===== */
+.search-stats.password-message {
+  color: #f39c12 !important;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(243, 156, 18, 0.1);
+  border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+/* 密码激活效果 */
+.password-activated {
+  animation: passwordReveal 0.6s ease-out;
+}
+
+.effect-pulse {
+  animation: passwordPulse 2s ease-in-out infinite;
+}
+
+.effect-sparkle {
+  animation: passwordSparkle 1.5s ease-in-out;
+}
+
+.effect-glow {
+  animation: passwordGlow 2s ease-in-out;
+}
+
+@keyframes passwordReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes passwordPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(243, 156, 18, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.6);
+  }
+}
+
+@keyframes passwordSparkle {
+  0% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #f39c12, 0 0 20px #f39c12;
+  }
+  100% {
+    text-shadow: none;
+  }
+}
+
+@keyframes passwordGlow {
+  0%,
+  100% {
+    background: rgba(243, 156, 18, 0.1);
+    border-color: rgba(243, 156, 18, 0.3);
+  }
+  50% {
+    background: rgba(243, 156, 18, 0.2);
+    border-color: rgba(243, 156, 18, 0.5);
+  }
+}
+
+/* ===== 密码侧边栏样式 ===== */
+#passwords-tab .tab-icon {
+  background: #9b59b6 !important;
+}
+
+#passwords-tab .tab-icon:hover {
+  background: #8e44ad !important;
+}
+
+.passwords-list {
+  padding: 15px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.password-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.password-group-header h4 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.password-count {
+  background: #9b59b6;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.password-item {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 4px solid #9b59b6;
+}
+
+.password-item:hover {
+  background: #e8f4fc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.password-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.password-type-icon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.password-name {
+  font-weight: bold;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.password-date {
+  font-size: 11px;
+  color: #7f8c8d;
+}
+
+.password-item-content {
+  font-size: 13px;
+  color: #5d6d7e;
+}
+
+.password-message {
+  margin: 0 0 5px 0;
+  line-height: 1.4;
+}
+
+.password-hint-text {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+/* 密码空状态 */
+.passwords-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #7f8c8d;
+}
+
+.passwords-empty .empty-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.passwords-empty p {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.passwords-empty small {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* 密码详情模态框 */
+.password-detail-modal {
+  max-width: 500px;
+}
+
+.password-detail-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.password-detail-icon {
+  font-size: 32px;
+  margin-right: 15px;
+}
+
+.password-detail-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.password-detail-type {
+  background: #9b59b6;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.password-detail-content {
+  color: #34495e;
+}
+
+.password-message-detail {
+  margin-bottom: 20px;
+}
+
+.password-message-detail h3 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.password-message-detail p {
+  line-height: 1.6;
+  margin: 0;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #9b59b6;
+}
+
+.password-meta {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.password-meta-item {
+  margin-bottom: 8px;
+  display: flex;
+}
+
+.password-meta-item strong {
+  color: #2c3e50;
+  min-width: 80px;
+  margin-right: 10px;
+}
+
+/* 密码搜索 */
+.password-search-container {
+  padding: 15px;
+  border-bottom: 1px solid #ecf0f1;
+  background: #f8f9fa;
+}
+
+.password-search-input {
+  width: 100%;
+  padding: 10px 40px 10px 35px;
+  border: 1px solid #bdc3c7;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.password-search-input:focus {
+  border-color: #9b59b6;
+  box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.2);
+}
+
+/* 密码通知 */
+.password-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #9b59b6;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 2000;
+  animation: slideInRight 0.5s ease;
+  display: flex;
+  align-items: center;
+  min-width: 250px;
+}
+
+.password-notification.fade-out {
+  animation: slideOutRight 0.5s ease forwards;
+}
+
+.password-notification .notification-icon {
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+/* 不同类型密码的颜色标识 */
+.password-item[data-type="achievement"] {
+  border-left-color: #f39c12;
+}
+
+.password-item[data-type="progress"] {
+  border-left-color: #3498db;
+}
+
+.password-item[data-type="easterEgg"] {
+  border-left-color: #e74c3c;
+}
+
+.password-item[data-type="secret"] {
+  border-left-color: #2c3e50;
+}
+
+.password-item[data-type="hint"] {
+  border-left-color: #27ae60;
+}
+
+/* 密码输入错误效果 */
+.password-input.shake {
+  animation: shake 0.5s ease-in-out;
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2) !important;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* 密码错误消息样式 */
+.password-result.error {
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  white-space: pre-line; /* 允许换行 */
+  text-align: left;
+  padding: 15px;
+  line-height: 1.4;
+}
+
+/* 密码成功消息样式 */
+.password-result.success {
+  background: rgba(39, 174, 96, 0.1);
+  border: 1px solid #27ae60;
+  color: #27ae60;
+  white-space: pre-line;
+  text-align: left;
+  padding: 15px;
+  line-height: 1.4;
+}
+/* 密码发现统计 */
+.password-stats {
+  font-size: 11px;
+  color: #7f8c8d;
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* 密码按钮样式 */
+.password-toggle {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  background: rgba(155, 89, 182, 0.9) !important; /* 紫色区分 */
+  z-index: 1500;
+}
+
+.password-toggle:hover {
+  background: rgba(142, 68, 173, 0.9) !important;
+}
+
+/* 主页状态下的密码按钮 */
+.home-page-active ~ #top-buttons-container .menu-toggle,
+.home-page-active ~ #top-buttons-container .password-toggle {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.home-page-active ~ #top-buttons-container .menu-toggle:hover,
+.home-page-active ~ #top-buttons-container .password-toggle:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.1);
+}
+
+/* 顶部按钮容器 */
+#top-buttons-container {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 密码模态框样式 */
+.password-modal {
+  max-width: 500px;
+  max-height: 450px;
+}
+
+.password-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.password-header h2 {
+  color: #2c3e50;
+  margin-bottom: 5px;
+  font-size: 24px;
+}
+
+.password-header p {
+  color: #7f8c8d;
+  margin: 0;
+  font-size: 14px;
+}
+
+.password-input-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.password-input {
+  flex: 1;
+  padding: 12px 15px;
+  border: 2px solid #bdc3c7;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background: white;
+}
+
+.password-input:focus {
+  border-color: #9b59b6;
+  box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.2);
+}
+
+.password-submit-btn {
+  background: #9b59b6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.password-submit-btn:hover {
+  background: #8e44ad;
+  transform: translateY(-2px);
+}
+
+.password-result {
+  min-height: 60px;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-result.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.password-result.success {
+  background: rgba(39, 174, 96, 0.1);
+  border: 1px solid #27ae60;
+  color: #27ae60;
+}
+
+.password-result.error {
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+}
+
+.password-result.warning {
+  background: rgba(243, 156, 18, 0.1);
+  border: 1px solid #f39c12;
+  color: #f39c12;
+}
+
+/* 密码功能特性展示 */
+.password-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(155, 89, 182, 0.05);
+  border-radius: 8px;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 5px;
+}
+
+.feature-icon {
+  font-size: 20px;
+}
+
+.feature-text {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.password-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid #ecf0f1;
+}
+
+.password-stat {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #9b59b6;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #7f8c8d;
+  text-transform: uppercase;
+}
+
+.password-hint {
+  text-align: right;
+  flex: 1;
+  margin-left: 15px;
+}
+
+.password-hint small {
+  color: #95a5a6;
+  font-style: italic;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+/* 密码效果动画 */
+.password-result.sparkle {
+  animation: passwordSparkle 1.5s ease-in-out;
+}
+
+.password-result.pulse {
+  animation: passwordPulse 2s ease-in-out infinite;
+}
+
+.password-result.glow {
+  animation: passwordGlow 2s ease-in-out;
+}
+
+@keyframes passwordSparkle {
+  0% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #9b59b6, 0 0 20px #9b59b6;
+  }
+  100% {
+    text-shadow: none;
+  }
+}
+
+@keyframes passwordPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(155, 89, 182, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(155, 89, 182, 0.6);
+  }
+}
+
+@keyframes passwordGlow {
+  0%,
+  100% {
+    background: rgba(155, 89, 182, 0.1);
+    border-color: rgba(155, 89, 182, 0.3);
+  }
+  50% {
+    background: rgba(155, 89, 182, 0.2);
+    border-color: rgba(155, 89, 182, 0.5);
+  }
+}
 /* ===== 通知样式 - 全局定义 ===== */
 
 /* 线索发现通知 - 保持在右上角 */
@@ -2211,6 +3055,55 @@ slot-info-item:last-child {
     z-index: 600 !important;
   }
 
+  .help-toggle {
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .help-modal {
+    width: 95%;
+    max-height: 85vh;
+  }
+
+  .help-section {
+    padding: 12px;
+  }
+
+  .help-section h3 {
+    font-size: 16px;
+  }
+
+  .password-toggle {
+    top: 70px;
+    left: 15px;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .password-modal {
+    width: 95%;
+    max-height: 80vh;
+  }
+
+  .password-features {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .password-stats {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .password-hint {
+    text-align: center;
+    margin-left: 0;
+  }
   /* 右侧标签栏响应式 */
 
   #characters-grid {
@@ -2256,6 +3149,25 @@ slot-info-item:last-child {
 
   .settings-footer {
     flex-direction: column;
+  }
+
+  #top-buttons-container {
+    top: 15px;
+    left: 15px;
+    gap: 8px;
+  }
+
+  .menu-toggle,
+  .password-toggle {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .menu-toggle {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
   }
   /* 新增：确保对话框文本在小屏幕上自动换行 */
   #dialog-text {
@@ -2418,6 +3330,27 @@ slot-info-item:last-child {
     font-size: 13px;
     min-width: 100px;
   }
+
+  .clue-search-container {
+    padding: 12px;
+  }
+
+  .clue-search-input {
+    padding: 8px 35px 8px 30px;
+    font-size: 13px;
+  }
+
+  .search-icon {
+    left: 10px;
+    font-size: 14px;
+  }
+
+  .clear-search-btn {
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    font-size: 16px;
+  }
 }
 
 /* 手机设备 */
@@ -2443,6 +3376,47 @@ slot-info-item:last-child {
     height: 40px;
     font-size: 16px;
     z-index: 3001;
+  }
+
+  .help-toggle {
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .help-body {
+    padding: 0 5px;
+  }
+
+  .help-section {
+    margin-bottom: 20px;
+  }
+
+  .password-toggle {
+    top: 65px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+  #top-buttons-container {
+    top: 10px;
+    left: 10px;
+    gap: 6px;
+  }
+  .menu-toggle,
+  .password-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .menu-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
   }
 
   #clues-list,

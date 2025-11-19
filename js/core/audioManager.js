@@ -31,6 +31,8 @@ const audioManager = {
     button_click: "audio/sfx/button_click.MP3",
     clue_discover: "audio/sfx/clue_discover.MP3",
     character_encounter: "audio/sfx/character_encounter.MP3",
+    menu_open: "path/to/menu-open-sound.mp3",
+    menu_close: "path/to/menu-close-sound.mp3",
   },
 
   init: function () {
